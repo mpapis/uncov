@@ -1,0 +1,11 @@
+/.bundle/
+/.yardoc
+/_yardoc/
+/coverage/
+/doc/
+/pkg/
+/spec/.failures.txt
+/spec/reports/
+/tmp/
+/vendor/
+*.gem

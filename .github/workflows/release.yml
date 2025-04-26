@@ -1,0 +1,61 @@
+name: Release Gem
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+jobs:
+  verify:
+    name: Verify code
+    uses: ./.github/workflows/ci.yml
+    # This reuses the CI workflow to ensure tests and linting pass
+
+  release:
+    name: Build and release gem
+    needs: verify  # Ensure CI passes before releasing
+    runs-on: ubuntu-latest
+    if: github.repository == 'mpapis/uncov'
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0  # For changelog generation
+
+      - name: Set up Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: '3.4'
+          bundler-cache: true
+
+      - name: Set release version
+        id: release_version
+        run: |
+          VERSION=${GITHUB_REF#refs/tags/v}
+          echo "version=$VERSION" >> $GITHUB_OUTPUT
+          echo "is_prerelease=$(ruby -e "puts /(alpha|beta|rc|pre)/.match?('$VERSION') ? 'true' : 'false'")" >> $GITHUB_OUTPUT
+
+      - name: Extract changelog for version
+        id: extract_changelog
+        run: |
+          VERSION="${{ steps.release_version.outputs.version }}"
+          if [ -f CHANGELOG.md ]; then
+            # Extract the section for this version from CHANGELOG.md
+            SECTION=$(awk "/## \[$VERSION\]/{flag=1; next} /## \[/{flag=0} flag" CHANGELOG.md)
+            echo "changelog<<EOF" >> $GITHUB_OUTPUT
+            echo "$SECTION" >> $GITHUB_OUTPUT
+            echo "EOF" >> $GITHUB_OUTPUT
+          else
+            echo "changelog=Release version $VERSION" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Build and publish
+        uses: rubygems/release-gem@v1
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v1
+        with:
+          name: "v${{ steps.release_version.outputs.version }}"
+          body: ${{ steps.extract_changelog.outputs.changelog }}
+          prerelease: ${{ steps.release_version.outputs.is_prerelease }}
+          token: ${{ secrets.GITHUB_TOKEN }}

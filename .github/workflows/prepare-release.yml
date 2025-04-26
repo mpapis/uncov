@@ -1,0 +1,130 @@
+name: Prepare Release
+
+on:
+  workflow_dispatch:
+    inputs:
+      version_bump:
+        description: 'Type of version bump'
+        required: true
+        default: 'patch'
+        type: choice
+        options:
+          - patch
+          - minor
+          - major
+      prerelease:
+        description: 'Create pre-release'
+        required: false
+        type: boolean
+        default: false
+
+jobs:
+  prepare:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Set up Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: '3.4'
+          bundler-cache: true
+
+      - name: Install gem-release
+        run: gem install gem-release
+
+      - name: Configure Git
+        run: |
+          git config user.name "GitHub Actions"
+          git config user.email "actions@github.com"
+
+      - name: Determine current version
+        id: current_version
+        run: |
+          CURRENT_VERSION=$(ruby -e "require './lib/uncov/version'; puts Uncov::VERSION")
+          echo "Current version: $CURRENT_VERSION"
+          echo "current_version=$CURRENT_VERSION" >> $GITHUB_OUTPUT
+
+      - name: Bump version
+        id: bump_version
+        run: |
+          BUMP_TYPE=${{ inputs.version_bump }}
+          
+          if [ "${{ inputs.prerelease }}" == "true" ]; then
+            # For pre-release we use the pre flag
+            gem bump --version $BUMP_TYPE --pre
+          else
+            gem bump --version $BUMP_TYPE
+          fi
+          
+          # Get the new version after bumping
+          NEW_VERSION=$(ruby -e "require './lib/uncov/version'; puts Uncov::VERSION")
+          echo "New version: $NEW_VERSION"
+          echo "new_version=$NEW_VERSION" >> $GITHUB_OUTPUT
+
+      - name: Generate changelog
+        id: changelog
+        uses: mikepenz/release-changelog-builder-action@v3
+        with:
+          configuration: |
+            {
+              "categories": [
+                {
+                  "title": "## 🚀 Features",
+                  "labels": ["feature", "enhancement"]
+                },
+                {
+                  "title": "## 🐛 Fixes",
+                  "labels": ["fix", "bug"]
+                },
+                {
+                  "title": "## 🧰 Maintenance",
+                  "labels": ["chore", "documentation"]
+                }
+              ]
+            }
+          fromTag: "v${{ steps.current_version.outputs.current_version }}"
+          toTag: "HEAD"
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Update CHANGELOG.md
+        run: |
+          VERSION="${{ steps.bump_version.outputs.new_version }}"
+          DATE=$(date +"%Y-%m-%d")
+          CHANGELOG_ENTRY="## [$VERSION] - $DATE\n\n${{ steps.changelog.outputs.changelog }}\n"
+          
+          if [ -f CHANGELOG.md ]; then
+            # If CHANGELOG.md exists, insert new entry after the header
+            sed -i "s/# Changelog/# Changelog\n\n$CHANGELOG_ENTRY/" CHANGELOG.md
+          else
+            # Create new CHANGELOG.md
+            echo -e "# Changelog\n\n$CHANGELOG_ENTRY" > CHANGELOG.md
+          fi
+
+      - name: Create release branch
+        run: |
+          BRANCH="release-v${{ steps.bump_version.outputs.new_version }}"
+          git checkout -b $BRANCH
+          git add CHANGELOG.md lib/uncov/version.rb
+          git commit -m "Prepare release v${{ steps.bump_version.outputs.new_version }}"
+          git push origin $BRANCH
+
+      - name: Create pull request
+        uses: peter-evans/create-pull-request@v5
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          title: "Release v${{ steps.bump_version.outputs.new_version }}"
+          body: |
+            ## Release v${{ steps.bump_version.outputs.new_version }}
+            
+            This PR prepares the release of version ${{ steps.bump_version.outputs.new_version }}
+            
+            ### Changes:
+            ${{ steps.changelog.outputs.changelog }}
+          base: main
+          branch: "release-v${{ steps.bump_version.outputs.new_version }}"
+          labels: "release"

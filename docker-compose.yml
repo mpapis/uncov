@@ -1,0 +1,9 @@
+version: '3.8'
+
+services:
+  uncov:
+    build: .
+    volumes:
+      - .:/app
+    environment:
+      - BUNDLE_PATH=/app/vendor/bundle

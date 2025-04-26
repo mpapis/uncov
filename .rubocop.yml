@@ -1,0 +1,22 @@
+plugins:
+  - rubocop-performance # https://docs.rubocop.org/rubocop-performance/cops_performance.html
+  - rubocop-rspec # https://docs.rubocop.org/rubocop-rspec/cops_rspec.html
+
+# Cops documented: https://docs.rubocop.org/rubocop/1.36/cops_style.html
+AllCops:
+  NewCops: enable
+  TargetRubyVersion: 3.1
+  SuggestExtensions: false
+
+Lint/MissingSuper:
+  AllowedParentClasses:
+    - GitError
+    - SimpleCovError
+    - FormatterError
+
+Style/ClassAndModuleChildren:
+  EnforcedStyle: compact
+
+Style/Documentation:
+  Exclude:
+    - lib/uncov.rb
