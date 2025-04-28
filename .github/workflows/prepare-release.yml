@@ -115,7 +115,7 @@ jobs:
           git checkout -b $BRANCH
           git add Gemfile.lock CHANGELOG.md lib/uncov/version.rb
           git commit -m "Prepare release v${{ steps.bump_version.outputs.new_version }}"
-          git push origin $BRANCH
+          git push -f origin $BRANCH
 
       - name: Create pull request
         run: |
@@ -126,5 +126,10 @@ jobs:
           ### Changes:
           ${{ steps.changelog.outputs.changelog }}
           '
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Run CI on PR
+        run: gh workflow run ci.yml --ref release-v${{ steps.bump_version.outputs.new_version }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
