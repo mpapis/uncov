@@ -59,9 +59,9 @@ jobs:
           
           if [ "${{ inputs.prerelease }}" == "true" ]; then
             # For pre-release we use the pre flag
-            gem bump --version $BUMP_TYPE --pre
+            gem bump --no-commit --version $BUMP_TYPE --pre
           else
-            gem bump --version $BUMP_TYPE
+            gem bump --no-commit --version $BUMP_TYPE
           fi
           
           # Get the new version after bumping
