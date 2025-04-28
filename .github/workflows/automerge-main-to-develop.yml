@@ -1,0 +1,37 @@
+name: Automerge main to develop
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  automerge:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Configure git
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+
+      - name: Fetch branches
+        run: |
+          git fetch origin main
+          git fetch origin develop
+
+      - name: Create temporary main and rebase branch
+        run: |
+          git checkout -b rebase-main main
+          git merge origin/develop
+
+      - name: Merge and push to develop
+        run: |
+          git checkout develop
+          git merge rebase-main
+          git push origin develop
+
+      - name: Delete temporary main branch
+        run: git branch -d rebase-main
