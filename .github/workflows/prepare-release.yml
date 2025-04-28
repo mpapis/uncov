@@ -26,7 +26,7 @@ jobs:
   prepare:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
         with:
           fetch-depth: 0
           token: ${{ secrets.GITHUB_TOKEN }}
@@ -68,6 +68,9 @@ jobs:
           NEW_VERSION=$(ruby -e "require './lib/uncov/version'; puts Uncov::VERSION")
           echo "New version: $NEW_VERSION"
           echo "new_version=$NEW_VERSION" >> $GITHUB_OUTPUT
+
+      - name: Update Gemfile.lock gem version
+        run: bundle install
 
       - name: Generate changelog
         id: changelog
