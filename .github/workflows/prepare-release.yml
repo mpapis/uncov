@@ -128,3 +128,8 @@ jobs:
           '
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Run CI on PR
+        run: gh workflow run ci.yml --ref release-v${{ steps.bump_version.outputs.new_version }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
