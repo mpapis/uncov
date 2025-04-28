@@ -131,6 +131,6 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Run CI on PR
-        run: gh workflow run ci.yml --ref ${{ github.ref }}
+        run: gh workflow run ci.yml --ref `git rev-parse HEAD`
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
