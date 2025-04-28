@@ -120,17 +120,11 @@ jobs:
 
       - name: Create pull request
         run: |
-          gh pr create -B main -H release-v${{ steps.bump_version.outputs.new_version }} \
-          --title 'Release v${{ steps.bump_version.outputs.new_version }}' \
+          gh pr new -B main -l release --title 'Release v${{ steps.bump_version.outputs.new_version }}' \
           --body '## Release v${{ steps.bump_version.outputs.new_version }}
           
           ### Changes:
           ${{ steps.changelog.outputs.changelog }}
           '
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Run CI on PR
-        run: gh workflow run ci.yml --ref release-v${{ steps.bump_version.outputs.new_version }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
