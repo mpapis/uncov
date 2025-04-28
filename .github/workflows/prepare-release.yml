@@ -70,7 +70,9 @@ jobs:
           echo "new_version=$NEW_VERSION" >> $GITHUB_OUTPUT
 
       - name: Update Gemfile.lock gem version
-        run: bundle install
+        run: |
+          bundle config set frozen false
+          bundle install
 
       - name: Generate changelog
         id: changelog
