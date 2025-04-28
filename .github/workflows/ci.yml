@@ -3,7 +3,9 @@ name: CI
 on:
   pull_request:
   push:
-    branches: [develop, main, release-*]
+    branches: [develop, main, release-v*]
+  pull_request_review:
+    types: [submitted]
   workflow_call:
 
 jobs:
