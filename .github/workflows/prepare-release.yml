@@ -114,18 +114,22 @@ jobs:
             echo -e "# Changelog\n\n$CHANGELOG_ENTRY" > CHANGELOG.md
           fi
 
+      - name: Create release branch
+        run: |
+          BRANCH="release-v${{ steps.bump_version.outputs.new_version }}"
+          git checkout -b $BRANCH
+          git add Gemmfile.lock CHANGELOG.md lib/uncov/version.rb
+          git commit -m "Prepare release v${{ steps.bump_version.outputs.new_version }}"
+          git push origin $BRANCH
+
       - name: Create pull request
-        uses: peter-evans/create-pull-request@v5
-        with:
-          token: ${{ secrets.GITHUB_TOKEN }}
-          commit-message: "Release v${{ steps.bump_version.outputs.new_version }}"
-          title: "Release v${{ steps.bump_version.outputs.new_version }}"
-          body: |
-            ## Release v${{ steps.bump_version.outputs.new_version }}
-            
-            This PR prepares the release of version ${{ steps.bump_version.outputs.new_version }}
-            
-            ### Changes:
-            ${{ steps.changelog.outputs.changelog }}
-          base: main
-          branch: "release-v${{ steps.bump_version.outputs.new_version }}"
+        run: |
+          gh pr create -B main -H release-v${{ steps.bump_version.outputs.new_version }} \
+          --title 'Release v${{ steps.bump_version.outputs.new_version }}' \
+          --body '## Release v${{ steps.bump_version.outputs.new_version }}
+          
+          ### Changes:
+          ${{ steps.changelog.outputs.changelog }}
+          '
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
