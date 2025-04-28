@@ -1,4 +1,4 @@
-name: Tag and Release
+name: Tag Version
 
 on:
   push:
@@ -17,8 +17,6 @@ jobs:
     if: github.repository == 'mpapis/uncov'
     steps:
       - uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
 
       - name: Set up Ruby
         uses: ruby/setup-ruby@v1

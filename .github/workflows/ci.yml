@@ -1,12 +1,8 @@
 name: CI
 
 on:
-  push:
-    branches: [develop, main]
   pull_request:
-    branches: [develop, main]
   workflow_call:
-  # This allows other workflows to call this one
 
 jobs:
   test:
@@ -16,8 +12,6 @@ jobs:
         ruby-version: ['3.2', '3.3', '3.4']
     steps:
       - uses: actions/checkout@v4
-        with:
-          fetch-depth: 0  # We need the full git history for diffs
 
       - name: Set up Ruby
         uses: ruby/setup-ruby@v1
