@@ -118,7 +118,7 @@ jobs:
         run: |
           BRANCH="release-v${{ steps.bump_version.outputs.new_version }}"
           git checkout -b $BRANCH
-          git add Gemmfile.lock CHANGELOG.md lib/uncov/version.rb
+          git add Gemfile.lock CHANGELOG.md lib/uncov/version.rb
           git commit -m "Prepare release v${{ steps.bump_version.outputs.new_version }}"
           git push origin $BRANCH
 
