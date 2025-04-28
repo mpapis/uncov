@@ -116,6 +116,7 @@ jobs:
         uses: peter-evans/create-pull-request@v5
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
+          commit-message: "Release v${{ steps.bump_version.outputs.new_version }}"
           title: "Release v${{ steps.bump_version.outputs.new_version }}"
           body: |
             ## Release v${{ steps.bump_version.outputs.new_version }}
