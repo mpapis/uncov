@@ -21,6 +21,8 @@ on:
 permissions:
   contents: write
   pull-requests: write
+  actions: write
+  checks: write
 
 jobs:
   prepare:
@@ -105,14 +107,9 @@ jobs:
           VERSION="${{ steps.bump_version.outputs.new_version }}"
           DATE=$(date +"%Y-%m-%d")
           CHANGELOG_ENTRY="## [$VERSION] - $DATE\n\n${{ steps.changelog.outputs.changelog }}\n"
-          
-          if [ -f CHANGELOG.md ]; then
-            # If CHANGELOG.md exists, insert new entry after the header
-            sed -i "s/# Changelog/# Changelog\n\n$CHANGELOG_ENTRY/" CHANGELOG.md
-          else
-            # Create new CHANGELOG.md
-            echo -e "# Changelog\n\n$CHANGELOG_ENTRY" > CHANGELOG.md
-          fi
+          echo -e "# Changelog\n\n$CHANGELOG_ENTRY" > CHANGELOG_NEW.md
+          [ -f CHANGELOG.md ] && tail -n +2 CHANGELOG.md >> CHANGELOG_NEW.md
+          mv CHANGELOG_NEW.md CHANGELOG.md
 
       - name: Create release branch
         run: |
@@ -120,12 +117,11 @@ jobs:
           git checkout -b $BRANCH
           git add Gemfile.lock CHANGELOG.md lib/uncov/version.rb
           git commit -m "Prepare release v${{ steps.bump_version.outputs.new_version }}"
-          git push origin $BRANCH
+          git push -f origin $BRANCH
 
       - name: Create pull request
         run: |
-          gh pr create -B main -H release-v${{ steps.bump_version.outputs.new_version }} \
-          --title 'Release v${{ steps.bump_version.outputs.new_version }}' \
+          gh pr new -B main -l release --title 'Release v${{ steps.bump_version.outputs.new_version }}' \
           --body '## Release v${{ steps.bump_version.outputs.new_version }}
           
           ### Changes:
