@@ -16,9 +16,9 @@ Uncov analyzes test coverage for changed files in your Git repository, helping y
 gem install uncov
 ```
 
-Or add to your Gemfile:
+Or add to your Gemfile (only for convenience):
 ```ruby
-gem 'uncov'
+gem 'uncov', require: false
 ```
 
 ## Usage
@@ -28,7 +28,7 @@ uncov
 ```
 With options:
 ```bash
-uncov --branch develop --path custom/coverage/path
+uncov --target develop --path custom/coverage/path
 ```
 Options
 - `-t`, `--target BRANCH`: Target branch for comparison (default: main)
@@ -39,15 +39,17 @@ Options
 
 ## Requirements
 
-- Ruby 2.7+
+- Ruby 3.2+
 - A Git repository
 - SimpleCov for test coverage
 
 ## Development
+- `docker-compose build uncov` to (re-)build dev container,
 - `docker-compose run uncov` to enter dev container,
 - `bundle` to install dependencies,
-- `bundle exec rake` to run test and lint,
-- `bin/uncov` to see uncovered changes (check itself)
+- `rake` to run test and lint,
+- `rake install` to install the gem,
+- `uncov` to see uncovered changes (check itself)
 
 ## Contributing
 Bug reports and pull requests are welcome on GitHub at https://github.com/mpapis/uncov.
