@@ -39,7 +39,7 @@ jobs:
         id: changelog
         uses: mikepenz/release-changelog-builder-action@v3
         with:
-          configuration: |
+          configurationJson: |
             {
               "categories": [
                 { "title": "## Major", "labels": ["breaking"] }
