@@ -27,7 +27,7 @@ module Uncov::Finder::SimpleCov
     def coverage
       root_path = "#{File.absolute_path(Uncov.configuration.path)}/"
       parsed = JSON.parse(File.read(coverage_path))
-      coverage = parsed['coverage'] || parsed.max_by { |_name, suite| suite['timestamp'] }['coverage']
+      coverage = parsed['coverage'] || parsed.values.max_by { |suite| suite['timestamp'] }['coverage']
       coverage.transform_keys { |key| key.delete_prefix(root_path) }
     end
 
