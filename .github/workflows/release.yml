@@ -42,7 +42,7 @@ jobs:
           configurationJson: |
             {
               "categories": [
-                { "title": "## Major", "labels": ["breaking"] }
+                { "title": "## Major", "labels": ["breaking"] },
                 { "title": "## Minor", "labels": ["feature"] },
                 { "title": "## Patch", "labels": ["fix"] }
               ],
