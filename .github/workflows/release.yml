@@ -105,4 +105,4 @@ jobs:
 
       - name: Release
         run: |
-          gem release --tag --push --github -d "${{ steps.changelog.outputs.changelog }}"
+          gem release --tag --push --github -d "${{ steps.changelog.outputs.changelog }}" --token "${{ secrets.GITHUB_TOKEN }}"
