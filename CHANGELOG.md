@@ -1,5 +1,15 @@
 # Changelog
 
+## [0.2.1] - 2025-04-29
+
+## Patch
+
+- Fix simplecov resultset parsing bug
+   - PR: #26
+
+
+
+
 ## [0.2.0] - 2025-04-29
 
 ## 🐛 Fixes
