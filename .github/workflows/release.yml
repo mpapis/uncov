@@ -11,13 +11,6 @@ jobs:
       id-token: write
     steps:
       - uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
-
-      - name: Configure Git
-        run: |
-          git config user.name "GitHub Action Release"
-          git config user.email "actions@github.com"
 
       - name: Set up Ruby
         uses: ruby/setup-ruby@v1
@@ -25,7 +18,7 @@ jobs:
           ruby-version: '3.2'
           bundler-cache: true
 
-      - name: Install gem-release
+      - name: Prepare changelog and version
         id: prepare
         uses: ./.github/workflows/changelog.yml
 
@@ -33,14 +26,16 @@ jobs:
         if: ${{ !steps.prepare.outputs.relasable }}
         run: exit 1
 
-      - name: Bump version
-        id: bump_version
+      - name: Configure Git
         run: |
-          gem bump --no-commit --version ${{ steps.prepare.outputs.version_bump }}
-          # Get the new version after bumping
-          NEW_VERSION=$(ruby -e "require './lib/uncov/version'; puts Uncov::VERSION")
-          echo "New version: $NEW_VERSION"
-          echo "new_version=$NEW_VERSION" >> $GITHUB_OUTPUT
+          git config user.name "GitHub Action Release"
+          git config user.email "actions@github.com"
+
+      - name: Configure trusted publishing credentials
+        uses: rubygems/configure-rubygems-credentials@v1.0.0
+
+      - name: Bump version
+        run: gem bump --no-commit --version ${{ steps.prepare.outputs.version_bump }}
 
       - name: Update Gemfile.lock gem version
         run: |
@@ -61,9 +56,6 @@ jobs:
           git add Gemfile.lock CHANGELOG.md lib/uncov/version.rb
           git commit -m "Prepare release v${{ steps.prepare.outputs.new_version }}"
           git push
-
-      - name: Configure trusted publishing credentials
-        uses: rubygems/configure-rubygems-credentials@v1.0.0
 
       - name: Release
         run: |

@@ -5,7 +5,7 @@ on:
   workflow_dispatch:
 
 jobs:
-  release:
+  changelog:
     runs-on: ubuntu-latest
     permissions:
       contents: read
@@ -14,7 +14,7 @@ jobs:
       current_version: ${{ steps.current_version.outputs.current_version }}
       new_version: ${{ steps.new_version.outputs.group1 }}
       version_bump: ${{ steps.version_bump.outputs.lowercase }}
-      releasable: ${{ steps.version_bump_match.outputs.match != '' }}
+      releasable: ${{ steps.version_bump_match.outputs.match != '' && steps.new_version.outputs.group1 != '' }}
 
     steps:
       - uses: actions/checkout@v4
@@ -43,7 +43,7 @@ jobs:
 
       - name: Generate changelog
         id: changelog
-        uses: mikepenz/release-changelog-builder-action@v3
+        uses: mikepenz/release-changelog-builder-action@v5
         with:
           configurationJson: |
             {
@@ -52,7 +52,8 @@ jobs:
                 { "title": "## Minor", "labels": ["release:feature"] },
                 { "title": "## Patch", "labels": ["release:fix"] }
               ],
-              "ignore_labels": ["release:ignore"]
+              "ignore_labels": ["release:ignore"],
+              "pr_template": "- [##{{NUMBER}}](#{{URL}}): #{{TITLE}}, by #{{AUTHOR}}"
             }
           fromTag: "v${{ steps.current_version.outputs.current_version }}"
           toTag: "HEAD"
