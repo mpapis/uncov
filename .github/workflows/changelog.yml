@@ -11,7 +11,7 @@ jobs:
       contents: read
     outputs:
       changelog: ${{ steps.changelog.outputs.changelog }}
-      current_version: ${{ steps.changelog.outputs.changelog }}
+      current_version: ${{ steps.current_version.outputs.current_version }}
       new_version: ${{ steps.new_version.outputs.group1 }}
       version_bump: ${{ steps.version_bump.outputs.lowercase }}
       releasable: ${{ steps.version_bump_match.outputs.match == '' }}
@@ -89,8 +89,8 @@ jobs:
 
       - name: Add job summary
         run: |
-          echo "# Current version\n${{ steps.changelog.outputs.changelog }}\n" >> $GITHUB_STEP_SUMMARY
-          echo "# Version bump\n${{ steps.version_bump.outputs.lowercase }}\n" >> $GITHUB_STEP_SUMMARY
-          echo "# New version\n${{ steps.new_version.outputs.group1 }}\n" >> $GITHUB_STEP_SUMMARY
-          echo "# Releasable\n${{ steps.version_bump_match.outputs.match == '' }}\n" >> $GITHUB_STEP_SUMMARY
-          echo "# Changelog\n${{ steps.changelog.outputs.changelog }}" >> $GITHUB_STEP_SUMMARY
+          echo -e '# Current version: ${{ steps.current_version.outputs.current_version }}\n\n' >> $GITHUB_STEP_SUMMARY
+          echo -e '# Version bump: ${{ steps.version_bump.outputs.lowercase }}\n\n' >> $GITHUB_STEP_SUMMARY
+          echo -e '# New version: ${{ steps.new_version.outputs.group1 }}\n\n' >> $GITHUB_STEP_SUMMARY
+          echo -e '# Releasable: ${{ steps.version_bump_match.outputs.match == '' }}\n\n' >> $GITHUB_STEP_SUMMARY
+          echo -e '# Changelog\n${{ steps.changelog.outputs.changelog }}' >> $GITHUB_STEP_SUMMARY
