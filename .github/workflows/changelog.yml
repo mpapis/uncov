@@ -48,12 +48,12 @@ jobs:
           configurationJson: |
             {
               "categories": [
-                { "title": "## Major", "labels": ["release:breaking"] },
-                { "title": "## Minor", "labels": ["release:feature"] },
-                { "title": "## Patch", "labels": ["release:fix"] }
+                { "title": "### Major", "labels": ["release:breaking"] },
+                { "title": "### Minor", "labels": ["release:feature"] },
+                { "title": "### Patch", "labels": ["release:fix"] }
               ],
               "ignore_labels": ["release:ignore"],
-              "pr_template": "- [##{{NUMBER}}](#{{URL}}): #{{TITLE}}, by #{{AUTHOR}}"
+              "pr_template": "- [##{{NUMBER}}](#{{URL}}): #{{TITLE}}, by [@#{{AUTHOR}}](https://github.com/#{{AUTHOR}})"
             }
           fromTag: "v${{ steps.current_version.outputs.current_version }}"
           toTag: "HEAD"
@@ -65,7 +65,7 @@ jobs:
         id: version_bump_match
         with:
           text: ${{ steps.changelog.outputs.changelog }}
-          regex: '^## (Major|Minor|Patch)$'
+          regex: '^### (Major|Minor|Patch)$'
           flags: m
 
       - name: Lowercase version bump
@@ -74,17 +74,17 @@ jobs:
         with:
           string: ${{ steps.version_bump_match.outputs.group1 }}
 
-      - name: New version output
-        id: new_version_output
+      - name: Bump version output
+        id: bump_version_output
         run: |
           NEW_VERSION=$(gem bump --pretend --no-commit --version ${{ steps.version_bump.outputs.lowercase }})
-          echo "new_version_output=$NEW_VERSION" >> $GITHUB_OUTPUT
+          echo "bump_version_output=$NEW_VERSION" >> $GITHUB_OUTPUT
 
       - name: New version
         uses: actions-ecosystem/action-regex-match@v2
         id: new_version
         with:
-          text: ${{ steps.new_version_output.outputs.new_version_output }}
+          text: ${{ steps.bump_version_output.outputs.bump_version_output }}
           regex: '^[Bb]ump.+ ([^ ]+)$'
           flags: m
 

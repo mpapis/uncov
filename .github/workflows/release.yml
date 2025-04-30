@@ -12,12 +12,6 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Set up Ruby
-        uses: ruby/setup-ruby@v1
-        with:
-          ruby-version: '3.2'
-          bundler-cache: true
-
       - name: Prepare changelog and version
         id: prepare
         uses: ./.github/workflows/changelog.yml
@@ -44,17 +38,22 @@ jobs:
 
       - name: Update CHANGELOG.md
         run: |
-          VERSION="${{ steps.prepare.outputs.new_version }}"
-          DATE=$(date +"%Y-%m-%d")
-          CHANGELOG_ENTRY="## [$VERSION] - $DATE\n\n${{ steps.prepare.outputs.changelog }}\n"
-          echo -e "# Changelog\n\n$CHANGELOG_ENTRY" > CHANGELOG_NEW.md
-          [ -f CHANGELOG.md ] && tail -n +2 CHANGELOG.md >> CHANGELOG_NEW.md
+          VERSION="v${{ steps.prepare.outputs.new_version }}"
+          cat << EOF > CHANGELOG_NEW.md
+          # Changelog
+          
+          ## $(date +"%Y-%m-%d"): [$VERSION](https://github.com/mpapis/uncov/releases/tag/$VERSION)
+          
+          ${{ steps.prepare.outputs.changelog }}
+          
+          EOF
+          [ -f CHANGELOG.md ] && tail -n +3 CHANGELOG.md >> CHANGELOG_NEW.md
           mv CHANGELOG_NEW.md CHANGELOG.md
 
       - name: Git push changes
         run: |
-          git add Gemfile.lock CHANGELOG.md lib/uncov/version.rb
-          git commit -m "Prepare release v${{ steps.prepare.outputs.new_version }}"
+          git add lib/uncov/version.rb Gemfile.lock CHANGELOG.md
+          git commit -m "Release v${{ steps.prepare.outputs.new_version }}"
           git push
 
       - name: Release
