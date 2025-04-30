@@ -1,0 +1,89 @@
+name: Release
+
+on:
+  workflow_call:
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    outputs:
+      changelog: ${{ steps.changelog.outputs.changelog }}
+      current_version: ${{ steps.changelog.outputs.changelog }}
+      new_version: ${{ steps.new_version.outputs.new_version }}
+      version_bump: ${{ steps.version_bump.outputs.lowercase }}
+      releasable: ${{ steps.version_bump_match.outputs.match == '' }}
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Configure Git
+        run: |
+          git config user.name "GitHub Action Release"
+          git config user.email "actions@github.com"
+
+      - name: Set up Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: '3.2'
+          bundler-cache: true
+
+      - name: Install gem-release
+        run: gem install gem-release
+
+      - name: Determine current version
+        id: current_version
+        run: |
+          CURRENT_VERSION=$(ruby -e "require './lib/uncov/version'; puts Uncov::VERSION")
+          echo "Current version: $CURRENT_VERSION"
+          echo "current_version=$CURRENT_VERSION" >> $GITHUB_OUTPUT
+
+      - name: Generate changelog
+        id: changelog
+        uses: mikepenz/release-changelog-builder-action@v3
+        with:
+          configurationJson: |
+            {
+              "categories": [
+                { "title": "## Major", "labels": ["release:breaking"] },
+                { "title": "## Minor", "labels": ["release:feature"] },
+                { "title": "## Patch", "labels": ["release:fix"] }
+              ],
+              "ignore_labels": ["release:ignore"]
+            }
+          fromTag: "v${{ steps.current_version.outputs.current_version }}"
+          toTag: "HEAD"
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Detect version bump
+        uses: actions-ecosystem/action-regex-match@v2
+        id: version_bump_match
+        with:
+          text: ${{ steps.changelog.outputs.changelog }}
+          regex: '^## (Major|Minor|Patch)$'
+          flags: m
+
+      - name: Lowercase version bump
+        id: version_bump
+        uses: ASzc/change-string-case-action@v6
+        with:
+          string: ${{ steps.version_bump_match.outputs.group1 }}
+
+      - name: New version
+        id: new_version
+        run: |
+          NEW_VERSION=$(gem bump --pretend --no-commit --version ${{ steps.version_bump.outputs.lowercase }})
+          ruby -e "require './lib/uncov/version'; puts Uncov::VERSION")
+          echo "new_version=$NEW_VERSION" >> $GITHUB_OUTPUT
+
+      - name: Add job summary
+        run: |
+          echo "#Current version\n${{ steps.changelog.outputs.changelog }}\n" >> $GITHUB_STEP_SUMMARY
+          echo "#Version bump\n${{ steps.version_bump.outputs.lowercase }}\n" >> $GITHUB_STEP_SUMMARY
+          echo "#New version\n${{ steps.new_version.outputs.new_version }}\n" >> $GITHUB_STEP_SUMMARY
+          echo "#Releasable\n${{ steps.version_bump_match.outputs.match == '' }}\n" >> $GITHUB_STEP_SUMMARY
+          echo "#Changelog\n${{ steps.changelog.outputs.changelog }}" >> $GITHUB_STEP_SUMMARY
