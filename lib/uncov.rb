@@ -45,6 +45,10 @@ module Uncov
     def message = "SimpleCov results not found at #{coverage_path.inspect}"
   end
 
+  class AutodetectSimpleCovPathError < SimpleCovError
+    def initialize = @message = 'Could not autodetect coverage report path'
+  end
+
   class UnsupportedFormatterError < FormatterError
     attr_reader :output_format
 
