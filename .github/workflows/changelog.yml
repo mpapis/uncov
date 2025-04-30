@@ -88,5 +88,5 @@ jobs:
           echo -e '# Current version: ${{ steps.current_version.outputs.current_version }}\n\n' >> $GITHUB_STEP_SUMMARY
           echo -e '# Version bump: ${{ steps.version_bump.outputs.lowercase }}\n\n' >> $GITHUB_STEP_SUMMARY
           echo -e '# New version: ${{ steps.new_version.outputs.group1 }}\n\n' >> $GITHUB_STEP_SUMMARY
-          echo -e '# Releasable: ${{ steps.version_bump_match.outputs.match != '' }}\n\n' >> $GITHUB_STEP_SUMMARY
+          echo -e '# Releasable: ${{ steps.version_bump_match.outputs.match != '' && steps.new_version.outputs.group1 != '' }}\n\n' >> $GITHUB_STEP_SUMMARY
           echo -e '# Changelog\n${{ steps.changelog.outputs.changelog }}' >> $GITHUB_STEP_SUMMARY
