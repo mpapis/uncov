@@ -1,5 +1,13 @@
 # Changelog
 
+## 2025-04-30: [v0.3.0](https://github.com/mpapis/uncov/releases/tag/v0.3.0)
+
+### Minor
+
+- [#28](https://github.com/mpapis/uncov/pull/28): Autodetect simplecov file path, by [@mpapis](https://github.com/mpapis)
+
+
+
 ## 2025-04-29: [v0.2.2](https://github.com/mpapis/uncov/releases/tag/v0.2.2)
 
 ### Patch
