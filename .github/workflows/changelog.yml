@@ -1,4 +1,4 @@
-name: Release
+name: Changelog
 
 on:
   workflow_call:
@@ -12,7 +12,7 @@ jobs:
     outputs:
       changelog: ${{ steps.changelog.outputs.changelog }}
       current_version: ${{ steps.changelog.outputs.changelog }}
-      new_version: ${{ steps.new_version.outputs.new_version }}
+      new_version: ${{ steps.new_version.outputs.group1 }}
       version_bump: ${{ steps.version_bump.outputs.lowercase }}
       releasable: ${{ steps.version_bump_match.outputs.match == '' }}
 
@@ -39,7 +39,6 @@ jobs:
         id: current_version
         run: |
           CURRENT_VERSION=$(ruby -e "require './lib/uncov/version'; puts Uncov::VERSION")
-          echo "Current version: $CURRENT_VERSION"
           echo "current_version=$CURRENT_VERSION" >> $GITHUB_OUTPUT
 
       - name: Generate changelog
@@ -74,17 +73,24 @@ jobs:
         with:
           string: ${{ steps.version_bump_match.outputs.group1 }}
 
-      - name: New version
-        id: new_version
+      - name: New version output
+        id: new_version_output
         run: |
           NEW_VERSION=$(gem bump --pretend --no-commit --version ${{ steps.version_bump.outputs.lowercase }})
-          ruby -e "require './lib/uncov/version'; puts Uncov::VERSION")
-          echo "new_version=$NEW_VERSION" >> $GITHUB_OUTPUT
+          echo "new_version_output=$NEW_VERSION" >> $GITHUB_OUTPUT
+
+      - name: New version
+        uses: actions-ecosystem/action-regex-match@v2
+        id: new_version
+        with:
+          text: ${{ steps.new_version_output.outputs.new_version_output }}
+          regex: '^Bumping .+ from version .+ to (.+)$'
+          flags: m
 
       - name: Add job summary
         run: |
-          echo "#Current version\n${{ steps.changelog.outputs.changelog }}\n" >> $GITHUB_STEP_SUMMARY
-          echo "#Version bump\n${{ steps.version_bump.outputs.lowercase }}\n" >> $GITHUB_STEP_SUMMARY
-          echo "#New version\n${{ steps.new_version.outputs.new_version }}\n" >> $GITHUB_STEP_SUMMARY
-          echo "#Releasable\n${{ steps.version_bump_match.outputs.match == '' }}\n" >> $GITHUB_STEP_SUMMARY
-          echo "#Changelog\n${{ steps.changelog.outputs.changelog }}" >> $GITHUB_STEP_SUMMARY
+          echo "# Current version\n${{ steps.changelog.outputs.changelog }}\n" >> $GITHUB_STEP_SUMMARY
+          echo "# Version bump\n${{ steps.version_bump.outputs.lowercase }}\n" >> $GITHUB_STEP_SUMMARY
+          echo "# New version\n${{ steps.new_version.outputs.group1 }}\n" >> $GITHUB_STEP_SUMMARY
+          echo "# Releasable\n${{ steps.version_bump_match.outputs.match == '' }}\n" >> $GITHUB_STEP_SUMMARY
+          echo "# Changelog\n${{ steps.changelog.outputs.changelog }}" >> $GITHUB_STEP_SUMMARY
