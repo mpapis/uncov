@@ -1,0 +1,8 @@
+release:breaking:
+  - head-branch: '^breaking/'
+release:feature:
+  - head-branch: '^feature/'
+release:fix:
+  - head-branch: '^fix/'
+release:ignore:
+  - head-branch: '^ignore/'
