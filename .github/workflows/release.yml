@@ -18,6 +18,9 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      - name: Debugging
+        run: echo '${{ toJSON(needs.changelog.outputs) }}'
+
       - name: No changes failure
         if: ${{ needs.changelog.outputs.releasable != 'true' }}
         run: exit 1
