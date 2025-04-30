@@ -12,4 +12,4 @@ jobs:
       - id: label-the-PR
         uses: actions/labeler@v5
       - name: Recheck required labels
-        run: gh worflow run enforce-labels.yml -f pr-number=${{ github.event.number }}
+        run: gh workflow run enforce-labels.yml -f pr-number=${{ github.event.number }}
