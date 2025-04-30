@@ -2,6 +2,22 @@ name: Changelog
 
 on:
   workflow_call:
+    outputs:
+      changelog:
+        description: "The generated changelog content"
+        value: ${{ jobs.changelog.outputs.changelog }}
+      current_version:
+        description: "The current version"
+        value: ${{ jobs.changelog.outputs.current_version }}
+      new_version:
+        description: "The new version"
+        value: ${{ jobs.changelog.outputs.new_version }}
+      version_bump:
+        description: "The version bump type (major, minor, patch)"
+        value: ${{ jobs.changelog.outputs.version_bump }}
+      releasable:
+        description: "Whether there are releasable changes"
+        value: ${{ jobs.changelog.outputs.releasable }}
   workflow_dispatch:
 
 jobs:

@@ -16,8 +16,18 @@ jobs:
       id-token: write
     needs: changelog
     steps:
-      - name: Debug changelog
-        run: echo '${{ toJSON(needs) }}'
+      - name: Debug changelog outputs
+        run: |
+          echo "Changelog outputs debugging information:"
+          echo "----------------------------------------"
+          echo "Changelog content preview: ${CHANGELOG:0:100}..."
+          echo "Current version: ${{ needs.changelog.outputs.current_version }}"
+          echo "New version: ${{ needs.changelog.outputs.new_version }}"
+          echo "Version bump: ${{ needs.changelog.outputs.version_bump }}"
+          echo "Releasable: ${{ needs.changelog.outputs.releasable }}"
+          echo "Full needs object: ${{ toJSON(needs) }}"
+        env:
+          CHANGELOG: ${{ needs.changelog.outputs.changelog }}
 
       - name: No changes failure
         if: ${{ needs.changelog.outputs.releasable != 'true' }}
