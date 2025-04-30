@@ -3,6 +3,7 @@ name: Enforce PR labels
 on:
   pull_request:
     types: [labeled, unlabeled, opened, reopened, edited, synchronize, auto_merge_enabled]
+  workflow_dispatch:
 jobs:
   enforce-label:
     runs-on: ubuntu-latest
