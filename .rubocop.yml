@@ -8,6 +8,9 @@ AllCops:
   TargetRubyVersion: 3.2
   SuggestExtensions: false
 
+Lint/ElseLayout:
+  Enabled: false
+
 Lint/MissingSuper:
   AllowedParentClasses:
     - GitError

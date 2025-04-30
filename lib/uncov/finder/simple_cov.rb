@@ -7,8 +7,7 @@ module Uncov::Finder::SimpleCov
   class << self
     def files(trigger_files = [])
       regenerate_report if requires_regeneration?(trigger_files)
-      raise MissingSimpleCovReport, coverage_path unless File.exist?(coverage_path)
-
+      raise_on_missing_coverage_path!
       coverage.transform_values { |file_coverage| covered_lines(file_coverage) }
     end
 
@@ -37,6 +36,22 @@ module Uncov::Finder::SimpleCov
       end.to_h
     end
 
-    def coverage_path = File.join(Uncov.configuration.path, Uncov.configuration.simplecov_output_path)
+    def coverage_path
+      if Uncov.configuration.simplecov_output_path == 'autodetect'
+        %w[coverage/coverage.json coverage/.resultset.json]
+          .map { |coverage_path| File.join(Uncov.configuration.path, coverage_path) }
+          .find { |path| File.exist?(path) }
+      else
+        File.join(Uncov.configuration.path, Uncov.configuration.simplecov_output_path)
+      end
+    end
+
+    def raise_on_missing_coverage_path!
+      return if File.exist?(coverage_path)
+
+      raise Uncov::AutodetectSimpleCovPathError if Uncov.configuration.simplecov_output_path == 'autodetect'
+
+      raise Uncov::MissingSimpleCovReport, coverage_path
+    end
   end
 end

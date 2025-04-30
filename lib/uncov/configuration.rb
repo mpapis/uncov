@@ -8,7 +8,7 @@ class Uncov::Configuration
   def initialize
     @git_diff_target = 'HEAD'
     @test_command = 'COVERAGE=true bundle exec rake test'
-    @simplecov_output_path = 'coverage/coverage.json'
+    @simplecov_output_path = 'autodetect'
     @path = '.'
     @relevant_files = ['{bin,exe,exec}/*', '{app,lib}/**/*.{rake,rb}']
     @report = :diff_lines
