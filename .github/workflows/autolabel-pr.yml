@@ -11,5 +11,3 @@ jobs:
     steps:
       - id: label-the-PR
         uses: actions/labeler@v5
-      - name: Recheck required labels
-        uses: ./.github/workflows/enforce-labels.yml

@@ -8,6 +8,9 @@ jobs:
   enforce-label:
     runs-on: ubuntu-latest
     steps:
+      - name: Delay for autolabel-pr.yml to work
+        run: sleep 3s
+
       - uses: docker://agilepathway/pull-request-label-checker:latest
         with:
           one_of: "release:ignore,release:fix,release:feature,release:breaking"

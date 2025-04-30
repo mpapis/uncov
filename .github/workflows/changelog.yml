@@ -14,7 +14,7 @@ jobs:
       current_version: ${{ steps.current_version.outputs.current_version }}
       new_version: ${{ steps.new_version.outputs.group1 }}
       version_bump: ${{ steps.version_bump.outputs.lowercase }}
-      releasable: ${{ steps.version_bump_match.outputs.match == '' }}
+      releasable: ${{ steps.version_bump_match.outputs.match != '' }}
 
     steps:
       - uses: actions/checkout@v4
@@ -84,7 +84,7 @@ jobs:
         id: new_version
         with:
           text: ${{ steps.new_version_output.outputs.new_version_output }}
-          regex: '^Bumping .+ from version .+ to (.+)$'
+          regex: '^[Bb]ump.+ ([^ ]+)$'
           flags: m
 
       - name: Add job summary
@@ -92,5 +92,5 @@ jobs:
           echo -e '# Current version: ${{ steps.current_version.outputs.current_version }}\n\n' >> $GITHUB_STEP_SUMMARY
           echo -e '# Version bump: ${{ steps.version_bump.outputs.lowercase }}\n\n' >> $GITHUB_STEP_SUMMARY
           echo -e '# New version: ${{ steps.new_version.outputs.group1 }}\n\n' >> $GITHUB_STEP_SUMMARY
-          echo -e '# Releasable: ${{ steps.version_bump_match.outputs.match == '' }}\n\n' >> $GITHUB_STEP_SUMMARY
+          echo -e '# Releasable: ${{ steps.version_bump_match.outputs.match != '' }}\n\n' >> $GITHUB_STEP_SUMMARY
           echo -e '# Changelog\n${{ steps.changelog.outputs.changelog }}' >> $GITHUB_STEP_SUMMARY
