@@ -43,24 +43,8 @@ Options
 - A Git repository
 - SimpleCov for test coverage
 
-## Development
-- `docker-compose build uncov` to (re-)build dev container,
-- `docker-compose run uncov` to enter dev container,
-- `bundle` to install dependencies,
-- `rake` to run test and lint,
-- `rake install` to install the gem,
-- `uncov` to see uncovered changes (check itself)
-
 ## Contributing
-Bug reports and pull requests are welcome on GitHub at https://github.com/mpapis/uncov.
-
-## Release Process
-This project uses an automated release process managed through GitHub Actions. For detailed information about contributing and the release workflow, please see [RELEASE.md](RELEASE.md).
-
-Maintainers can trigger new releases through the GitHub Actions interface with minimal manual intervention, following Semantic Versioning principles.
-
-## Security
-This project has security practices, please see [SECURITY.md](SECURITY.md).
+Contributing, developing, pull requests, releasing, security -> [CONTRIBUTING.md](CONTRIBUTING.md).
 
 ## License
 The gem is available as open source under the terms of the [MIT License](https://opensource.org/licenses/MIT).

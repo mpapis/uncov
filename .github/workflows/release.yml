@@ -4,7 +4,7 @@ on:
   workflow_dispatch:
 
 jobs:
-  prepare:
+  release:
     runs-on: ubuntu-latest
     permissions:
       contents: write
@@ -26,55 +26,17 @@ jobs:
           bundler-cache: true
 
       - name: Install gem-release
-        run: gem install gem-release
-
-      - name: Determine current version
-        id: current_version
-        run: |
-          CURRENT_VERSION=$(ruby -e "require './lib/uncov/version'; puts Uncov::VERSION")
-          echo "Current version: $CURRENT_VERSION"
-          echo "current_version=$CURRENT_VERSION" >> $GITHUB_OUTPUT
-
-      - name: Generate changelog
-        id: changelog
-        uses: mikepenz/release-changelog-builder-action@v3
-        with:
-          configurationJson: |
-            {
-              "categories": [
-                { "title": "## Major", "labels": ["release:breaking"] },
-                { "title": "## Minor", "labels": ["release:feature"] },
-                { "title": "## Patch", "labels": ["release:fix"] }
-              ],
-              "ignore_labels": ["release:ignore"]
-            }
-          fromTag: "v${{ steps.current_version.outputs.current_version }}"
-          toTag: "HEAD"
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Detect version bump
-        uses: actions-ecosystem/action-regex-match@v2
-        id: version_bump_match
-        with:
-          text: ${{ steps.changelog.outputs.changelog }}
-          regex: '^## (Major|Minor|Patch)$'
-          flags: m
+        id: prepare
+        uses: ./.github/workflows/changelog.yml
 
       - name: No changes failure
-        if: ${{ steps.version_bump_match.outputs.match == '' }}
+        if: ${{ !steps.prepare.outputs.relasable }}
         run: exit 1
-
-      - name: Lowercase version bump
-        id: version_bump
-        uses: ASzc/change-string-case-action@v6
-        with:
-          string: ${{ steps.version_bump_match.outputs.group1 }}
 
       - name: Bump version
         id: bump_version
         run: |
-          gem bump --no-commit --version ${{ steps.version_bump.outputs.lowercase }}
+          gem bump --no-commit --version ${{ steps.prepare.outputs.version_bump }}
           # Get the new version after bumping
           NEW_VERSION=$(ruby -e "require './lib/uncov/version'; puts Uncov::VERSION")
           echo "New version: $NEW_VERSION"
@@ -87,9 +49,9 @@ jobs:
 
       - name: Update CHANGELOG.md
         run: |
-          VERSION="${{ steps.bump_version.outputs.new_version }}"
+          VERSION="${{ steps.prepare.outputs.new_version }}"
           DATE=$(date +"%Y-%m-%d")
-          CHANGELOG_ENTRY="## [$VERSION] - $DATE\n\n${{ steps.changelog.outputs.changelog }}\n"
+          CHANGELOG_ENTRY="## [$VERSION] - $DATE\n\n${{ steps.prepare.outputs.changelog }}\n"
           echo -e "# Changelog\n\n$CHANGELOG_ENTRY" > CHANGELOG_NEW.md
           [ -f CHANGELOG.md ] && tail -n +2 CHANGELOG.md >> CHANGELOG_NEW.md
           mv CHANGELOG_NEW.md CHANGELOG.md
@@ -97,7 +59,7 @@ jobs:
       - name: Git push changes
         run: |
           git add Gemfile.lock CHANGELOG.md lib/uncov/version.rb
-          git commit -m "Prepare release v${{ steps.bump_version.outputs.new_version }}"
+          git commit -m "Prepare release v${{ steps.prepare.outputs.new_version }}"
           git push
 
       - name: Configure trusted publishing credentials
@@ -105,4 +67,4 @@ jobs:
 
       - name: Release
         run: |
-          gem release --tag --push --github -d "${{ steps.changelog.outputs.changelog }}" --token "${{ secrets.GITHUB_TOKEN }}"
+          gem release --tag --push --github -d "${{ steps.prepare.outputs.changelog }}" --token "${{ secrets.GITHUB_TOKEN }}"
