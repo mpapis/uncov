@@ -13,3 +13,5 @@ jobs:
         uses: actions/labeler@v5
       - name: Recheck required labels
         run: gh workflow run enforce-labels.yml -f pr-number=${{ github.event.number }}
+        env:
+          GH_TOKEN: ${{ github.token }}
