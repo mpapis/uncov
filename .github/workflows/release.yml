@@ -42,11 +42,11 @@ jobs:
           configurationJson: |
             {
               "categories": [
-                { "title": "## Major", "labels": ["breaking"] },
-                { "title": "## Minor", "labels": ["feature"] },
-                { "title": "## Patch", "labels": ["fix"] }
+                { "title": "## Major", "labels": ["release:breaking"] },
+                { "title": "## Minor", "labels": ["release:feature"] },
+                { "title": "## Patch", "labels": ["release:fix"] }
               ],
-              "ignore_labels": ["ignore"]
+              "ignore_labels": ["release:ignore"]
             }
           fromTag: "v${{ steps.current_version.outputs.current_version }}"
           toTag: "HEAD"

@@ -2,12 +2,12 @@ name: Enforce PR labels
 
 on:
   pull_request:
-    types: [labeled, unlabeled, opened, edited, synchronize]
+    types: [labeled, unlabeled, opened, reopened, edited, synchronize, auto_merge_enabled]
 jobs:
   enforce-label:
     runs-on: ubuntu-latest
     steps:
-      - uses: yogevbd/enforce-label-action@2.1.0
+      - uses: docker://agilepathway/pull-request-label-checker:latest
         with:
-          REQUIRED_LABELS_ANY: "ignore,fix,feature,breaking"
-          REQUIRED_LABELS_ANY_DESCRIPTION: "Select release label: ignore, fix(patch), feature(minor), breaking(major)"
+          one_of: "release:ignore,release:fix,release:feature,release:breaking"
+          repo_token: ${{ secrets.GITHUB_TOKEN }}
