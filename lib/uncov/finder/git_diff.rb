@@ -31,7 +31,7 @@ module Uncov::Finder::GitDiff
         when 'HEAD'
           git_diff_target
         else
-          repo.branches[git_diff_target] or raise NotGitBranchError, git_diff_target
+          repo.branches[git_diff_target] or raise Uncov::NotGitBranchError, git_diff_target
         end
 
       repo.diff(target)

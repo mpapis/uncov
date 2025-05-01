@@ -3,7 +3,7 @@ name: CI
 on:
   pull_request:
   push:
-    branches: [develop, main, release-v*]
+    branches: [develop, release-v*]
   workflow_dispatch:
 
 jobs:
@@ -23,6 +23,11 @@ jobs:
 
       - name: Run tests
         run: COVERAGE=1 bundle exec rake test
+
+      - name: Code coverage of changes
+        run: |
+          git fetch origin ${{ github.base_ref }}
+          bundle exec uncov -t origin/${{ github.base_ref }}
 
   lint:
     runs-on: ubuntu-latest
