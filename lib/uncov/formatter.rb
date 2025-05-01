@@ -8,7 +8,7 @@ module Uncov::Formatter
       when :terminal
         Uncov::Formatter::Terminal.new(report).output
       else
-        raise UnsupportedFormatterError, Uncov.configuration.output_format
+        raise Uncov::UnsupportedFormatterError, Uncov.configuration.output_format
       end
     end
   end

@@ -10,7 +10,7 @@ class Uncov::Configuration
     @test_command = 'COVERAGE=true bundle exec rake test'
     @simplecov_output_path = 'autodetect'
     @path = '.'
-    @relevant_files = ['{bin,exe,exec}/*', '{app,lib}/**/*.{rake,rb}']
+    @relevant_files = ['{bin,exe,exec}/*', '{app,lib}/**/*.{rake,rb}', 'Rakefile']
     @report = :diff_lines
     @output_format = :terminal
   end

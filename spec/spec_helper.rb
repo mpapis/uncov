@@ -41,7 +41,8 @@ if ENV['COVERAGE']
 
     SimpleCov.formatter = SimpleCov::Formatter::JSONFormatter
   end
-
-  # require all files so coverage is reported properly
-  Dir["#{File.dirname(__FILE__)}/../lib/**/*.rb"].sort_by { |f| [f.count('/'), f] }.each { |f| require f }
 end
+
+# require all files for coverage, but also to prevent manually requiring dependencies in spec and lib/files
+Dir["#{__dir__}/../lib/**/*.rb"].sort_by { |f| [f.count('/'), f] }.each { |f| require f }
+load "#{__dir__}/../Rakefile"

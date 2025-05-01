@@ -1,11 +1,15 @@
 # frozen_string_literal: true
 
-require 'bundler/gem_tasks'
-require 'rspec/core/rake_task'
 require 'rubocop/rake_task'
+require 'rspec/core/rake_task'
 
-RSpec::Core::RakeTask.new(:test)
 RuboCop::RakeTask.new(:lint)
-Bundler::GemHelper.install_tasks
+RSpec::Core::RakeTask.new(:test)
 
-task default: %i[test lint]
+task(:coverage_env) { ENV['COVERAGE'] = 'true' }
+
+desc 'Check new code coverage'
+task('uncov') { system 'uncov' }
+
+desc 'Run: lint, test, uncov'
+task default: %i[lint coverage_env test uncov]
