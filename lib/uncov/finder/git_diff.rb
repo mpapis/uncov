@@ -26,17 +26,17 @@ module Uncov::Finder::GitDiff
 
     def git_diff
       repo = open_repo
-      target =
-        case git_diff_target
+      git_target =
+        case target
         when 'HEAD'
-          git_diff_target
+          target
         else
-          repo.branches[git_diff_target] or raise Uncov::NotGitBranchError, git_diff_target
+          repo.branches[target] or raise Uncov::NotGitBranchError, target
         end
 
-      repo.diff(target)
+      repo.diff(git_target)
     end
 
-    def git_diff_target = Uncov.configuration.git_diff_target
+    def target = Uncov.configuration.target
   end
 end

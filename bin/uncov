@@ -3,4 +3,12 @@
 
 require 'uncov'
 
-Uncov::CLI.start(ARGV)
+status =
+  catch(:exit) do
+    case Uncov::CLI.start(ARGV)
+    when true then 0
+    when false then 1
+    else 128
+    end
+  end
+exit status

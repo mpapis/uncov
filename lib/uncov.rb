@@ -7,22 +7,25 @@ Dir["#{File.dirname(__FILE__)}/**/*.rb"]
 # uncover missing code coverage by tests
 module Uncov
   class << self
-    attr_accessor :configuration
-
-    def configure
-      self.configuration ||= Configuration.new
+    def configure(args = [])
       yield(configuration) if block_given?
+      configuration.parse_cli(args) if args.any?
+      warn({ configuration: configuration.options_values }.inspect) if configuration.debug
+      nil
     end
 
-    def reset
-      self.configuration = Configuration.new
-    end
+    def configuration = @configuration ||= Configuration.new
   end
 
-  class Error < StandardError; end
+  class Error < StandardError
+    def inspect = "#<#{self.class}: #{message}>"
+  end
+
+  class ConfigurationError < Error; end
   class GitError < Error; end
   class SimpleCovError < Error; end
   class FormatterError < Error; end
+  class OptionValueNotAllowed < ConfigurationError; end
 
   class NotGitRepoError < GitError
     attr_reader :path
@@ -38,6 +41,10 @@ module Uncov
     def message = "Target branch #{target_branch.inspect} not found locally or in remote"
   end
 
+  class FailedToGenerateReport < SimpleCovError
+    def message = cause.message
+  end
+
   class MissingSimpleCovReport < SimpleCovError
     attr_reader :coverage_path
 
@@ -46,7 +53,7 @@ module Uncov
   end
 
   class AutodetectSimpleCovPathError < SimpleCovError
-    def initialize = @message = 'Could not autodetect coverage report path'
+    def message = 'Could not autodetect coverage report path'
   end
 
   class UnsupportedFormatterError < FormatterError
@@ -56,6 +63,3 @@ module Uncov
     def message = "#{output_format.inspect} is not a supported formatter"
   end
 end
-
-# Initialize with defaults
-Uncov.configure

@@ -6,6 +6,9 @@
 /pkg/
 /spec/.failures.txt
 /spec/reports/
+/spec/fixtures/project/*
+!/spec/fixtures/project/prepare.sh
+!/spec/fixtures/project/cleanup.sh
 /tmp/
 /vendor/
 *.gem
