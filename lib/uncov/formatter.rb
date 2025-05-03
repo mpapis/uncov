@@ -3,9 +3,11 @@
 # chose formater to output the report
 module Uncov::Formatter
   class << self
+    def formats = %w[terminal]
+
     def output(report)
       case Uncov.configuration.output_format
-      when :terminal
+      when 'terminal'
         Uncov::Formatter::Terminal.new(report).output
       else
         raise Uncov::UnsupportedFormatterError, Uncov.configuration.output_format

@@ -29,4 +29,5 @@ Gem::Specification.new do |spec|
   spec.add_dependency 'git', '~> 3.0'
   spec.add_dependency 'git_diff_parser', '~> 4.0'
   spec.add_dependency 'logger', '~> 1.7'
+  spec.add_dependency 'optparse'
 end

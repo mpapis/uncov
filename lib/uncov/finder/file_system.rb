@@ -9,11 +9,7 @@ class Uncov::Finder::FileSystem
   private
 
   def all_files
-    Uncov.configuration.relevant_files.flat_map do |expresion|
-      Dir
-        .glob(expresion, Uncov::Configuration::FILE_MATCH_FLAGS, base: Uncov.configuration.path)
-        .select { |f| File.file?(f) }
-    end
+    Dir.glob(Uncov.configuration.relevant_files, Uncov::Configuration::FILE_MATCH_FLAGS).select { |f| File.file?(f) }
   end
 
   def lines_proc(file_name) = -> { cache(file_name) { read_lines(file_name) } }

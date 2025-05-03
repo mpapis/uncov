@@ -1,13 +1,13 @@
 # Uncov
-Uncov analyzes test coverage for changed files in your Git repository, helping you ensure that all your recent changes are properly tested.
+Uncov analyzes test coverage for changed files in your Git repository,
+helping you ensure that all your recent changes are properly tested.
 
 
 ## Features
 - Compare your working tree to a target branch
 - Identify changed Ruby files
-- Check test coverage for those changes using SimpleCov
-- Run tests automatically for files without coverage data
-- Generate reports of uncovered lines in changed files
+- Run tests automatically for (changed) relevant files
+- Print report of uncovered lines in (changed) files
 
 
 ## Installation
@@ -25,16 +25,23 @@ Basic usage:
 ```bash
 uncov
 ```
-With options:
+
+Display configuration options:
 ```bash
-uncov --target develop --path custom/coverage/path
+uncov -h
 ```
-Options
-- `-t`, `--target BRANCH`: Target branch for comparison (default: HEAD)
-- `-c`, `--command COMMAND`: Test command to run (default: bundle exec rake test)
-- `-p`, `--path PATH`: Path to SimpleCov results (default: coverage/.resultset.json)
-- `-h`, `--help`: Display help
-- `-v`, `--version`: Display version
+
+## Configuration file
+`.uncov` file in the directory where it's ran stores default options,
+specify one argument per line - this eliminates the need for special parsing of the file.
+
+Example:
+```text
+--target
+develop
+--test-command
+COVERAGE=1 rspec
+```
 
 
 ## Requirements

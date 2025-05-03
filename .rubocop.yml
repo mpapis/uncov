@@ -8,6 +8,9 @@ AllCops:
   TargetRubyVersion: 3.2
   SuggestExtensions: false
 
+Layout/LineLength:
+  Max: 140
+
 Lint/ElseLayout:
   Enabled: false
 
@@ -16,6 +19,25 @@ Lint/MissingSuper:
     - GitError
     - SimpleCovError
     - FormatterError
+
+Metrics/ParameterLists:
+  Max: 6
+
+RSpec/ContextWording:
+  Prefixes:
+    - when
+    - with
+    - without
+    - and
+
+RSpec/ImplicitSubject:
+  Enabled: false
+
+RSpec/MultipleExpectations:
+  Enabled: false
+
+RSpec/NestedGroups:
+  Max: 5
 
 Style/ClassAndModuleChildren:
   EnforcedStyle: compact

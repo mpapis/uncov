@@ -7,13 +7,11 @@ module Uncov::Finder::GitBase
   protected
 
   def relevant_file?(path)
-    Uncov.configuration.relevant_files.any? do |pattern|
-      File.fnmatch?(pattern, path, Uncov::Configuration::FILE_MATCH_FLAGS)
-    end
+    File.fnmatch?(Uncov.configuration.relevant_files, path, Uncov::Configuration::FILE_MATCH_FLAGS)
   end
 
   def open_repo
-    ::Git.open(Uncov.configuration.path)
+    ::Git.open('.')
   rescue ArgumentError => e
     raise Uncov::NotGitRepoError, Uncov.configuration.path if e.message.end_with?(' is not in a git working tree')
 

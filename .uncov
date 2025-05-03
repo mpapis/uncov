@@ -1,0 +1,4 @@
+--test-command
+COVERAGE=true bundle exec rspec
+--simplecov-file
+coverage/.resultset.json

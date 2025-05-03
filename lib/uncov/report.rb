@@ -6,10 +6,12 @@ require_relative 'cache'
 class Uncov::Report
   include Uncov::Cache
 
+  def self.types = %w[diff_lines]
+
   def files
     cache(:files) do
       case Uncov.configuration.report
-      when :diff_lines
+      when 'diff_lines'
         finder = Uncov::Finder.new(:git_diff)
         Uncov::Report::DiffLines.files(finder)
       end
