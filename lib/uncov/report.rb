@@ -1,24 +1,45 @@
 # frozen_string_literal: true
 
 require_relative 'cache'
+require_relative 'struct'
 
 # calculated coverage report for configured report type
-class Uncov::Report
+class Uncov::Report < Uncov::Struct.new(:files)
   include Uncov::Cache
 
-  def self.types = %w[diff_lines]
+  class << self
+    def types
+      %w[diff_lines]
+    end
 
-  def files
-    cache(:files) do
-      case Uncov.configuration.report
-      when 'diff_lines'
-        finder = Uncov::Finder.new(:git_diff)
-        Uncov::Report::DiffLines.files(finder)
+    def build
+      files =
+        case Uncov.configuration.report
+        when 'diff_lines'
+          finder = Uncov::Finder.new(:git_diff)
+          Uncov::Report::DiffLines.files(finder)
+        end
+      new(files:)
+    end
+  end
+
+  def uncovered_files
+    cache(:uncovered_files) do
+      files.select(&:uncov?)
+    end
+  end
+
+  def coverage
+    cache(:coverage) do
+      if files.empty?
+        100.0
+      else
+        files.sum(&:coverage) / files.size
       end
     end
   end
 
-  def uncovered_files = cache(:uncovered_files) { files.reject(&:covered?) }
-  def coverage = cache(:coverage) { files.sum(&:coverage) / files.size }
-  def covered? = files.all?(&:covered?)
+  def uncov?
+    uncovered_files.any?
+  end
 end

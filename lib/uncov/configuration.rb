@@ -19,15 +19,15 @@ class Uncov::Configuration
   end
 
   option 'target', 'Target branch for comparison', options: ['-t', '--target TARGET'], default: 'HEAD'
-  option 'report', 'Report type to generate',
-         options: ['-r', '--report TYPE'], default: 'diff_lines', allowed_values: Uncov::Report.types
+  option 'report', 'Report type to generate', options: ['-r', '--report TYPE'], default: 'diff_lines', allowed_values: Uncov::Report.types
   option 'output_format', 'Output format',
          options: ['-o', '--output-format FORMAT'], default: 'terminal', allowed_values: Uncov::Formatter.formats
+  option 'context', 'Additional lines context in output',
+         options: ['-C', '--context LINES_NUMBER'], default: 1, value_parse: lambda(&:to_i)
   option 'test_command', 'Test command that generates SimpleCov',
          options: '--test-command COMMAND', default: 'COVERAGE=true bundle exec rake test'
   option 'simplecov_file', 'SimpleCov results file', options: '--simplecov-file PATH', default: 'autodetect'
-  option 'relevant_files',
-         'Relevant files shell filename globing: https://ruby-doc.org/core-3.1.1/File.html#method-c-fnmatch',
+  option 'relevant_files', 'Relevant files shell filename globing: https://ruby-doc.org/core-3.1.1/File.html#method-c-fnmatch',
          options: '--relevant-files', default: '{{bin,exe,exec}/*,{app,lib}/**/*.{rake,rb},Rakefile}'
   option 'debug', 'Get some insights', options: '--debug', default: false, value_parse: ->(_value) { true }
 

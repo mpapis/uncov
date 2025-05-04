@@ -6,6 +6,18 @@ module Uncov::Formatter
     def formats = %w[terminal]
 
     def output(report)
+      if report.files.empty?
+        return puts 'No files to report.'.green
+      elsif !report.uncov?
+        return puts "All changed files(#{report.files.count}) have 100% test coverage!".green
+      end
+
+      output_report(report)
+    end
+
+    private
+
+    def output_report(report)
       case Uncov.configuration.output_format
       when 'terminal'
         Uncov::Formatter::Terminal.new(report).output

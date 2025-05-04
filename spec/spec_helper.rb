@@ -9,6 +9,8 @@ RSpec.configure do |config|
   config.expect_with :rspec do |expectations|
     # This option will default to `true` in RSpec 4.
     expectations.include_chain_clauses_in_custom_matcher_descriptions = true
+    # Do not truncate object.inspect - show proper diff's
+    expectations.max_formatted_output_length = nil
   end
   config.mock_with :rspec do |mocks|
     # Prevents you from mocking or stubbing a method that does not exist on
@@ -32,7 +34,7 @@ RSpec.configure do |config|
     system_run('./prepare.sh')
   end
 
-  # config.after {  }
+  config.after { Uncov.configuration_reset! }
 
   config.after(:suite) { system_run('./cleanup.sh full') }
 
@@ -76,7 +78,7 @@ if ENV['COVERAGE']
   SimpleCov.start 'bundler_filter' do
     # Additional coverage missing detection
     enable_coverage :branch
-    self.formatters = [SimpleCov::Formatter::JSONFormatter]
+    # self.formatters = [SimpleCov::Formatter::JSONFormatter]
   end
 end
 

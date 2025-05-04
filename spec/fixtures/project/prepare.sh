@@ -28,6 +28,11 @@ COVERAGE=1 rspec
 EOF
 
 save_file lib/project.rb <<EOF
+# :nocov:
+def inc(a)
+  a + 1
+end
+# :nocov:
 EOF
 
 save_file spec/project_spec_helper.rb <<EOF
@@ -45,10 +50,10 @@ if ENV['COVERAGE'] || ENV['COVERAGE_JSON']
     end
   end
 end
-require_relative '../lib/project'
 EOF
 
 save_file spec/lib/project_spec.rb <<EOF
+require_relative '../../lib/project'
 EOF
 
 git add .
@@ -57,11 +62,11 @@ git commit -m "Empty"
 git checkout -b develop
 
 save_file lib/project.rb <<EOF
+# :nocov:
 def inc(a)
-  # :nocov:
   a + 1
-  # :nocov:
 end
+# :nocov:
 
 def dec(a)
   1
