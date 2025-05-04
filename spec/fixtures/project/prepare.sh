@@ -61,12 +61,7 @@ git commit -m "Empty"
 
 git checkout -b develop
 
-save_file lib/project.rb <<EOF
-# :nocov:
-def inc(a)
-  a + 1
-end
-# :nocov:
+add_to_file lib/project.rb <<EOF
 
 def dec(a)
   1
@@ -75,38 +70,54 @@ EOF
 
 git commit -a -m "Code"
 
+
 git checkout -b develop_coverage_json
 
 add_to_file .gitignore <<EOF
 !/coverage/coverage.json
 EOF
 COVERAGE_JSON=1 rspec
-git add .
+git add .gitignore coverage/coverage.json
 git commit -m 'Failing coverage.json'
 
+
 git checkout develop
-git checkout -b develop_coverage_resultset
+git checkout -b develop_a
+
+add_to_file lib/project.rb <<EOF
+
+def succ(a)
+  'b'
+end
+EOF
+
+git commit -a -m "Extra Code"
+
+
+git checkout -b develop_a_coverage_json
 
 add_to_file .gitignore <<EOF
-!/coverage/.resultset.json
+!/coverage/coverage.json
 EOF
-COVERAGE=1 rspec
-git add .
-git commit -m 'Failing .resultset.json'
+COVERAGE_JSON=1 rspec
+git add .gitignore coverage/coverage.json
+git commit -m 'Failing coverage.json'
 
 
-git checkout develop
+git checkout develop_a
 git checkout -b test
 
 save_file spec/lib/project_spec.rb <<EOF
 require_relative '../../lib/project'
 RSpec.describe 'project' do
   it { expect(dec(2)).to eq(1) }
+  it { expect(succ('a')).to eq('b') }
 end
 EOF
 
 git commit -a -m "Test"
 git tag v1
+
 
 git checkout -b test_coverage_json
 
@@ -114,8 +125,9 @@ add_to_file .gitignore <<EOF
 !/coverage/coverage.json
 EOF
 COVERAGE_JSON=1 rspec
-git add .
+git add .gitignore coverage/coverage.json
 git commit -m 'Success coverage.json'
+
 
 git checkout test
 git checkout -b test_coverage_resultset
@@ -124,5 +136,5 @@ add_to_file .gitignore <<EOF
 !/coverage/.resultset.json
 EOF
 COVERAGE=1 rspec
-git add .
+git add .gitignore coverage/.resultset.json
 git commit -m 'Success .resultset.json'

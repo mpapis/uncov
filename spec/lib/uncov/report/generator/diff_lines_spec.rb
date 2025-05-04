@@ -9,7 +9,7 @@ RSpec.describe Uncov::Report::Generator::DiffLines do
   before { allow(Uncov.configuration).to receive_messages(target:, context:, simplecov_file: 'coverage/coverage.json') }
 
   context 'when no changes', branch: 'test_coverage_json' do
-    let(:target) { 'develop' }
+    let(:target) { 'develop_a' }
 
     it { is_expected.to be_empty }
   end

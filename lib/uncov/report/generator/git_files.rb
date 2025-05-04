@@ -2,6 +2,8 @@
 
 # report only files lines from the diff
 module Uncov::Report::Generator::GitFiles
+  Uncov::Report::Generator.register(self, :git, 'Report missing coverage on files tracked with git')
+
   class << self
     def files(finder)
       finder.git_file_names.map do |file_name|
@@ -16,12 +18,12 @@ module Uncov::Report::Generator::GitFiles
     private
 
     def lines(finder, file_name)
-      lines_hash = files_lines(finder, file_name)
+      lines_hash = file_lines(finder, file_name)
       add_context(lines_hash)
       lines_hash.sort.to_h.values
     end
 
-    def files_lines(finder, file_name)
+    def file_lines(finder, file_name)
       finder.file_system_file_lines(file_name).to_h do |line_number, content|
         [line_number, new_line(finder, file_name, line_number, content)]
       end
@@ -41,14 +43,14 @@ module Uncov::Report::Generator::GitFiles
       end
     end
 
-    def new_line(finder, file_name, line_number, content, context: false)
+    def new_line(finder, file_name, line_number, content)
       Uncov::Report::File::Line.new(
         number: line_number,
         content:,
         no_cov: finder.no_cov_file_line?(file_name, line_number),
         simple_cov: finder.simple_cov_file_line?(file_name, line_number),
         git_diff: finder.git_diff_file_line?(file_name, line_number),
-        context:
+        context: false
       )
     end
   end
