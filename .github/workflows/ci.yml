@@ -25,6 +25,7 @@ jobs:
         run: COVERAGE=1 bundle exec rake test
 
       - name: Code coverage of changes
+        if: ${{ github.base_ref }}
         run: |
           git fetch origin ${{ github.base_ref }}
           bundle exec uncov -t origin/${{ github.base_ref }}
