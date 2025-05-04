@@ -22,21 +22,21 @@ RSpec.describe Uncov do
     after { described_class.instance_variable_set(:@configuration, nil) }
 
     context 'with args' do
-      let(:args) { %w[--target origin/develop] }
+      let(:args) { %w[--target develop] }
 
       it 'sets configuration target' do
         expect { configure }
-          .to change { described_class.configuration.target }.from('HEAD').to('origin/develop')
+          .to change { described_class.configuration.target }.from('HEAD').to('develop')
           .and not_output.to_stderr
       end
     end
 
     context 'with block' do
-      let(:block) { ->(config) { config.target = 'origin/develop' } }
+      let(:block) { ->(config) { config.target = 'develop' } }
 
       it 'sets configuration target' do
         expect { configure }
-          .to change { described_class.configuration.target }.from('HEAD').to('origin/develop')
+          .to change { described_class.configuration.target }.from('HEAD').to('develop')
           .and not_output.to_stderr
       end
     end

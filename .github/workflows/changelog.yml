@@ -19,6 +19,8 @@ on:
         description: "Whether there are releasable changes"
         value: ${{ jobs.changelog.outputs.releasable }}
   workflow_dispatch:
+  push:
+    branches: ['develop']
 
 jobs:
   changelog:
