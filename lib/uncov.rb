@@ -14,7 +14,13 @@ module Uncov
       nil
     end
 
-    def configuration = @configuration ||= Configuration.new
+    def configuration
+      @configuration ||= Configuration.new
+    end
+
+    def configuration_reset!
+      @configuration = Configuration.new
+    end
   end
 
   class Error < StandardError

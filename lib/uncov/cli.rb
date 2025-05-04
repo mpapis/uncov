@@ -6,9 +6,9 @@ require 'optparse'
 class Uncov::CLI
   def self.start(args)
     Uncov.configure(args)
-    report = Uncov::Report.new
+    report = Uncov::Report.build
     Uncov::Formatter.output(report)
-    report.covered?
+    !report.uncov?
   rescue StandardError => e
     raise if Uncov.configuration.debug
 

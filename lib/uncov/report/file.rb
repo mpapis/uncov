@@ -1,16 +1,8 @@
 # frozen_string_literal: true
 
 # represents file coverage in report
-class Uncov::Report::File
+class Uncov::Report::File < Uncov::Struct.new(:file_name, :lines, :git)
   include Uncov::Cache
-
-  attr_reader :file_name, :lines, :git
-
-  def initialize(file_name:, lines:, git:)
-    @file_name = file_name
-    @lines = lines
-    @git = git
-  end
 
   def coverage
     cache(:coverage) do
@@ -22,9 +14,31 @@ class Uncov::Report::File
     end
   end
 
-  def covered? = lines.all?(&:covered?)
-  def changed_lines = lines.select(&:git_diff)
-  def covered_lines = lines.select(&:covered?)
-  def uncovered_lines = lines.reject(&:covered?)
-  def relevant_lines = lines.select(&:relevant?)
+  def uncov?
+    uncov_lines.any?
+  end
+
+  def uncov_lines
+    cache(:uncov_lines) do
+      lines.select(&:uncov?)
+    end
+  end
+
+  def covered_lines
+    cache(:covered_lines) do
+      lines.reject(&:uncov?)
+    end
+  end
+
+  def display_lines
+    cache(:display_lines) do
+      lines.select(&:display?)
+    end
+  end
+
+  def relevant_lines
+    cache(:relevant_lines) do
+      lines.select(&:relevant?)
+    end
+  end
 end

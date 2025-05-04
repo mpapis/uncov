@@ -9,7 +9,7 @@ AllCops:
   SuggestExtensions: false
 
 Layout/LineLength:
-  Max: 140
+  Max: 150
 
 Lint/ElseLayout:
   Enabled: false
@@ -29,6 +29,9 @@ RSpec/ContextWording:
     - with
     - without
     - and
+
+RSpec/ExampleLength:
+  Enabled: false
 
 RSpec/ImplicitSubject:
   Enabled: false

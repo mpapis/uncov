@@ -5,24 +5,21 @@ RSpec.describe Uncov::Finder::GitDiff do
 
   before { allow(Uncov.configuration).to receive(:target).and_return(target) }
 
-  context 'when comparing with HEAD', :reset_git, branch: 'develop' do
+  context 'when comparing with HEAD', branch: 'test' do
     let(:target) { 'HEAD' }
 
-    before do
-      File.write('lib/example.rb', "true\n")
-      system_run('git add lib/example.rb')
-    end
+    before { File.write('lib/project.rb', "def neg(a)\n  false\nend\n", mode: 'a') }
 
-    it { is_expected.to include('lib/example.rb') }
+    it { is_expected.to eq('lib/project.rb' => { 10 => nil, 11 => nil, 12 => nil }) }
   end
 
-  context 'when comparing with clean branch', branch: 'develop' do
+  context 'when comparing with branch', branch: 'develop' do
     let(:target) { 'clean' }
 
-    it { is_expected.to include('lib/project.rb') }
+    it { is_expected.to eq('lib/project.rb' => { 6 => nil, 7 => nil, 8 => nil, 9 => nil }) }
   end
 
-  context 'when comparing with unknown target' do
+  context 'when comparing with unknown target', branch: 'test' do
     let(:target) { 'unknown' }
 
     it do

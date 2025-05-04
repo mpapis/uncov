@@ -19,7 +19,9 @@ module Uncov::Finder::GitDiff
     def changed_lines(file_diff)
       GitDiffParser.parse(file_diff.patch).flat_map do |patch|
         patch.changed_lines.map do |changed_line|
-          [changed_line.number, nil] if changed_line.content[0] == '+'
+          next unless changed_line.content[0] == '+'
+
+          [changed_line.number, nil]
         end
       end.compact.to_h
     end
