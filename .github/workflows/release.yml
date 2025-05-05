@@ -59,7 +59,7 @@ jobs:
               in_code_block = true
               puts '\`\`\`bash'
               puts '\$ uncov -h'
-              puts '$(uncov -h)'
+              puts '$(bundle exec uncov -h)'
               next
             elsif in_code_block && /^\`\`\`$/
               in_code_block = false
