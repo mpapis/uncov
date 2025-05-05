@@ -31,7 +31,7 @@ Basic usage:
 uncov
 ```
 
-Display configuration options:
+### Display configuration options
 ```bash
 $ uncov -h
 Usage: uncov [options]
@@ -45,7 +45,7 @@ Usage: uncov [options]
         --debug                      Get some insights, default: false
     -v, --version                    Show version
     -h, --help                       Print this help
-uncov 0.3.0 by Michal Papis <mpapis@gmail.com>
+uncov 0.4.0 by Michal Papis <mpapis@gmail.com>
 ```
 
 

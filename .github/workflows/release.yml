@@ -47,6 +47,29 @@ jobs:
           bundle config set frozen false
           bundle install
 
+      - name: Update README.md - Display configuration options
+        run: |
+          ruby -i'' -ne "
+            BEGIN { in_target_section = false; in_code_block = false }
+            if /^### Display configuration options$/
+              in_target_section = true
+              print
+              next
+            elsif in_target_section && /^\`\`\`bash$/
+              in_code_block = true
+              puts '\`\`\`bash'
+              puts '\$ uncov -h'
+              puts '$(uncov -h)'
+              next
+            elsif in_code_block && /^\`\`\`$/
+              in_code_block = false
+              in_target_section = false
+              puts '\`\`\`'
+              next
+            end
+            print unless in_code_block
+          " README.md
+
       - name: Update CHANGELOG.md
         run: |
           VERSION="v${{ needs.changelog.outputs.new_version }}"
@@ -63,7 +86,7 @@ jobs:
 
       - name: Git push changes
         run: |
-          git add lib/uncov/version.rb Gemfile.lock CHANGELOG.md
+          git add lib/uncov/version.rb Gemfile.lock README.md CHANGELOG.md
           git commit -m "Release v${{ needs.changelog.outputs.new_version }}"
           git push
 
