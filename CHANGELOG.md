@@ -1,5 +1,13 @@
 # Changelog
 
+## 2025-05-05: [v0.4.1](https://github.com/mpapis/uncov/releases/tag/v0.4.1)
+
+### Patch
+
+- [#40](https://github.com/mpapis/uncov/pull/40): Ignore removed git diff files, by [@mpapis](https://github.com/mpapis)
+
+
+
 ## 2025-05-05: [v0.4.0](https://github.com/mpapis/uncov/releases/tag/v0.4.0)
 
 ### Minor

@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    uncov (0.4.0)
+    uncov (0.4.1)
       colorize (~> 1.1)
       git (~> 3.0)
       git_diff_parser (~> 4.0)
