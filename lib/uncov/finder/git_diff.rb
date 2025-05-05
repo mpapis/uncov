@@ -10,7 +10,7 @@ module Uncov::Finder::GitDiff
 
     def files
       git_diff.filter_map do |file_diff|
-        [file_diff.path, changed_lines(file_diff)] if relevant_file?(file_diff.path)
+        [file_diff.path, changed_lines(file_diff)] if relevant_file?(file_diff.path) && File.exist?(file_diff.path)
       end.to_h
     end
 
