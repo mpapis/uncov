@@ -1,5 +1,18 @@
 # Changelog
 
+## 2025-05-05: [v0.4.0](https://github.com/mpapis/uncov/releases/tag/v0.4.0)
+
+### Minor
+
+- [#38](https://github.com/mpapis/uncov/pull/38): Read configuration from file, by [@mpapis](https://github.com/mpapis)
+- [#39](https://github.com/mpapis/uncov/pull/39): Add output context lines, by [@mpapis](https://github.com/mpapis)
+
+### Patch
+
+- [#37](https://github.com/mpapis/uncov/pull/37): Fix exception raising without namespace, by [@mpapis](https://github.com/mpapis)
+
+
+
 ## 2025-04-30: [v0.3.0](https://github.com/mpapis/uncov/releases/tag/v0.3.0)
 
 ### Minor
