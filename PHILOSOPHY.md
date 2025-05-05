@@ -29,6 +29,7 @@ There has been a lot written about how to test, learn how others approach testin
 - https://martinfowler.com/bliki/TestCoverage.html
 - https://martinfowler.com/articles/practical-test-pyramid.html
 - https://www.betterspecs.org/
+- https://github.com/ch1ago/bdd
 
 There is a lot of gold in there, but I do not agree with everything there,
 you need to find your own way that works for your specific project needs.
