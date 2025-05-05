@@ -28,6 +28,8 @@ module Uncov::Report::DiffLines
     end
 
     def add_context(finder, file_name, lines_hash)
+      return if Uncov.configuration.context.zero?
+
       line_numbers =
         lines_hash.filter_map do |line_number, line|
           line_number if line.uncov?
