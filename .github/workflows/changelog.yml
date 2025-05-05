@@ -82,18 +82,21 @@ jobs:
           flags: m
 
       - name: Lowercase version bump
+        if: ${{ steps.version_bump_match.outputs.group1 }}
         id: version_bump
         uses: ASzc/change-string-case-action@v6
         with:
           string: ${{ steps.version_bump_match.outputs.group1 }}
 
       - name: Bump version output
+        if: ${{ steps.version_bump_match.outputs.group1 }}
         id: bump_version_output
         run: |
           NEW_VERSION=$(gem bump --pretend --no-commit --version ${{ steps.version_bump.outputs.lowercase }})
           echo "bump_version_output=$NEW_VERSION" >> $GITHUB_OUTPUT
 
       - name: New version
+        if: ${{ steps.version_bump_match.outputs.group1 }}
         uses: actions-ecosystem/action-regex-match@v2
         id: new_version
         with:
@@ -101,10 +104,17 @@ jobs:
           regex: '^[Bb]ump.+ ([^ ]+)$'
           flags: m
 
-      - name: Add job summary
+      - name: Add job summary - changelog
+        if: ${{ steps.version_bump_match.outputs.group1 }}
         run: |
           echo -e '# Current version: ${{ steps.current_version.outputs.current_version }}\n\n' > $GITHUB_STEP_SUMMARY
           echo -e '# Version bump: ${{ steps.version_bump.outputs.lowercase }}\n\n' >> $GITHUB_STEP_SUMMARY
           echo -e '# New version: ${{ steps.new_version.outputs.group1 }}\n\n' >> $GITHUB_STEP_SUMMARY
           echo -e '# Releasable: ${{ steps.version_bump_match.outputs.match != '' && steps.new_version.outputs.group1 != '' }}\n\n' >> $GITHUB_STEP_SUMMARY
           echo -e '# Changelog\n${{ steps.changelog.outputs.changelog }}' >> $GITHUB_STEP_SUMMARY
+
+
+      - name: Add job summary - no changes
+        if: ${{ !steps.version_bump_match.outputs.group1 }}
+        run: |
+          echo -e '# No changes' >> $GITHUB_STEP_SUMMARY
