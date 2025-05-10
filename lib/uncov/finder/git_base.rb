@@ -6,8 +6,12 @@ require 'git'
 module Uncov::Finder::GitBase
   protected
 
-  def relevant_file?(path)
+  def relevant_code_file?(path)
     File.fnmatch?(Uncov.configuration.relevant_files, path, Uncov::Configuration::FILE_MATCH_FLAGS)
+  end
+
+  def relevant_test_file?(path)
+    File.fnmatch?(Uncov.configuration.relevant_tests, path, Uncov::Configuration::FILE_MATCH_FLAGS)
   end
 
   def open_repo

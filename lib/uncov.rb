@@ -10,7 +10,7 @@ module Uncov
     def configure(args = [])
       yield(configuration) if block_given?
       configuration.parse_cli(args) if args.any?
-      warn({ configuration: configuration.options_values }.inspect) if configuration.debug
+      warn("{configuration: #{configuration.options_values.inspect}}") if configuration.debug
       nil
     end
 

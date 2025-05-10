@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 require_relative 'formatter'
-require_relative 'report'
+require_relative 'report/generator'
 
 # handle configuration for uncov
 class Uncov::Configuration
@@ -19,7 +19,7 @@ class Uncov::Configuration
   end
 
   option 'target', 'Target branch for comparison', options: ['-t', '--target TARGET'], default: 'HEAD'
-  option 'report', 'Report type to generate', options: ['-r', '--report TYPE'], default: 'diff_lines', allowed_values: Uncov::Report.types
+  option 'report', 'Report type to generate', options: ['-r', '--report TYPE'], default: 'diff_lines', allowed_values: Uncov::Report::Generator.types
   option 'output_format', 'Output format',
          options: ['-o', '--output-format FORMAT'], default: 'terminal', allowed_values: Uncov::Formatter.formats
   option 'context', 'Additional lines context in output',
@@ -27,8 +27,10 @@ class Uncov::Configuration
   option 'test_command', 'Test command that generates SimpleCov',
          options: '--test-command COMMAND', default: 'COVERAGE=true bundle exec rake test'
   option 'simplecov_file', 'SimpleCov results file', options: '--simplecov-file PATH', default: 'autodetect'
-  option 'relevant_files', 'Relevant files shell filename globing: https://ruby-doc.org/core-3.1.1/File.html#method-c-fnmatch',
-         options: '--relevant-files', default: '{{bin,exe,exec}/*,{app,lib}/**/*.{rake,rb},Rakefile}'
+  option 'relevant_files', 'Only show uncov for matching code files AND trigger tests if matching code files are newer than the report',
+         options: '--relevant-files FN_GLOB', default: '{{bin,exe,exec}/*,{app,lib}/**/*.{rake,rb},Rakefile}'
+  option 'relevant_tests', 'Trigger tests if matching test files are newer than the report',
+         options: '--relevant-tests FN_GLOB', default: '{test,spec}/**/*'
   option 'debug', 'Get some insights', options: '--debug', default: false, value_parse: ->(_value) { true }
 
   def initialize
@@ -66,15 +68,16 @@ class Uncov::Configuration
   def parser_header(parser) = parser.banner = 'Usage: uncov [options]'
 
   def parser_footer(parser)
-    parser.on('-v', '--version', 'Show version') do
-      puts "uncov #{Uncov::VERSION} by Michal Papis <mpapis@gmail.com>"
-      throw :exit, 0
-    end
     parser.on('-h', '--help', 'Print this help') do
-      puts parser
-      puts "uncov #{Uncov::VERSION} by Michal Papis <mpapis@gmail.com>"
+      puts parser.help
       throw :exit, 0
     end
+    parser.separator <<~HELP
+
+      FN_GLOB: shell filename globing -> https://ruby-doc.org/core-3.1.1/File.html#method-c-fnmatch
+
+      uncov #{Uncov::VERSION} by Michal Papis <mpapis@gmail.com>
+    HELP
   end
 
   def options = @options ||= {}

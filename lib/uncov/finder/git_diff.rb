@@ -4,41 +4,56 @@ require_relative 'git_base'
 require 'git_diff_parser'
 
 # collect list of changed files and their added lines (removed do not impact coverage)
-module Uncov::Finder::GitDiff
-  class << self
-    include Uncov::Finder::GitBase
+class Uncov::Finder::GitDiff
+  include Uncov::Finder::GitBase
+  include Uncov::Cache
 
-    def files
-      git_diff.filter_map do |file_diff|
-        [file_diff.path, changed_lines(file_diff)] if relevant_file?(file_diff.path) && File.exist?(file_diff.path)
+  def code_files
+    cache(:code_files) do
+      all_files_diff.filter_map do |file_diff|
+        [file_diff.path, changed_lines(file_diff)] if relevant_code_file?(file_diff.path) && File.exist?(file_diff.path)
       end.to_h
     end
-
-    private
-
-    def changed_lines(file_diff)
-      GitDiffParser.parse(file_diff.patch).flat_map do |patch|
-        patch.changed_lines.map do |changed_line|
-          next unless changed_line.content[0] == '+'
-
-          [changed_line.number, nil]
-        end
-      end.compact.to_h
-    end
-
-    def git_diff
-      repo = open_repo
-      git_target =
-        case target
-        when 'HEAD'
-          target
-        else
-          repo.branches[target] or raise Uncov::NotGitBranchError, target
-        end
-
-      repo.diff(git_target)
-    end
-
-    def target = Uncov.configuration.target
   end
+
+  def test_files
+    cache(:test_files) do
+      all_files_diff.filter_map do |file_diff|
+        [file_diff.path, true] if relevant_test_file?(file_diff.path) && File.exist?(file_diff.path)
+      end.to_h
+    end
+  end
+
+  private
+
+  def all_files_diff
+    cache(:all_files) do
+      git_diff
+    end
+  end
+
+  def changed_lines(file_diff)
+    GitDiffParser.parse(file_diff.patch).flat_map do |patch|
+      patch.changed_lines.map do |changed_line|
+        next unless changed_line.content[0] == '+'
+
+        [changed_line.number, nil]
+      end
+    end.compact.to_h
+  end
+
+  def git_diff
+    repo = open_repo
+    git_target =
+      case target
+      when 'HEAD'
+        target
+      else
+        repo.branches[target] or raise Uncov::NotGitBranchError, target
+      end
+
+    repo.diff(git_target)
+  end
+
+  def target = Uncov.configuration.target
 end

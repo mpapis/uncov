@@ -46,7 +46,7 @@ RSpec.describe Uncov do
 
       it 'sets configuration target' do
         # different ruby version have different formatting for hashes inspect
-        expect { configure }.to output(/configuration(: |=>){.*debug(: |=>)true}}/).to_stderr
+        expect { configure }.to output(/{configuration: {.*debug(: |=>)true}}/).to_stderr
       end
     end
   end
