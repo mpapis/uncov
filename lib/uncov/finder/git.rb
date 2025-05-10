@@ -5,7 +5,6 @@ require_relative 'git_base'
 # collect list of files stored in git
 class Uncov::Finder::Git
   include Uncov::Finder::GitBase
-  include Uncov::Cache
 
   def code_files
     cache(:code_files) do

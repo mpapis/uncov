@@ -40,11 +40,11 @@ module Uncov
     def message = "#{path.inspect} is not in a git working tree"
   end
 
-  class NotGitBranchError < GitError
+  class NotGitObjectError < GitError
     attr_reader :target_branch
 
     def initialize(target_branch) = @target_branch = target_branch
-    def message = "Target branch #{target_branch.inspect} not found locally or in remote"
+    def message = "Git target #{target_branch.inspect} not found locally"
   end
 
   class FailedToGenerateReport < SimpleCovError
