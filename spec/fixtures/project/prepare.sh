@@ -106,6 +106,7 @@ end
 EOF
 
 git commit -a -m "Test"
+git tag v1
 
 git checkout -b test_coverage_json
 

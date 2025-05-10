@@ -16,6 +16,22 @@ RSpec.describe Uncov::Finder::GitDiff do
       it { is_expected.to eq('lib/project.rb' => { 10 => nil, 11 => nil, 12 => nil }) }
     end
 
+    context 'when comparing with tag v1', branch: 'test' do
+      let(:target) { 'v1' }
+
+      before { File.write('lib/project.rb', "def neg(a)\n  false\nend\n", mode: 'a') }
+
+      it { is_expected.to eq('lib/project.rb' => { 10 => nil, 11 => nil, 12 => nil }) }
+    end
+
+    context 'when comparing with HEAD^', branch: 'test' do
+      let(:target) { 'HEAD^' }
+
+      before { File.write('lib/project.rb', "def neg(a)\n  false\nend\n", mode: 'a') }
+
+      it { is_expected.to eq('lib/project.rb' => { 10 => nil, 11 => nil, 12 => nil }) }
+    end
+
     context 'when comparing with branch', branch: 'develop' do
       let(:target) { 'clean' }
 
@@ -27,7 +43,7 @@ RSpec.describe Uncov::Finder::GitDiff do
 
       it do
         expect { git_diff_code_files }.to raise_error(
-          Uncov::NotGitBranchError, 'Target branch "unknown" not found locally or in remote'
+          Uncov::NotGitObjectError, 'Git target "unknown" not found locally'
         )
       end
     end

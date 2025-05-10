@@ -6,7 +6,6 @@ require 'git_diff_parser'
 # collect list of changed files and their added lines (removed do not impact coverage)
 class Uncov::Finder::GitDiff
   include Uncov::Finder::GitBase
-  include Uncov::Cache
 
   def code_files
     cache(:code_files) do
@@ -44,16 +43,18 @@ class Uncov::Finder::GitDiff
 
   def git_diff
     repo = open_repo
-    git_target =
-      case target
-      when 'HEAD'
-        target
-      else
-        repo.branches[target] or raise Uncov::NotGitBranchError, target
-      end
-
+    # TODO: resolve the need for verifying the target with git gem
+    git_target = repo.lib.send(:command, 'rev-parse', '--verify', target)
     repo.diff(git_target)
+  rescue Git::FailedError => e
+    raise Uncov::NotGitObjectError, target if e.result.status.exitstatus == 128 && e.result.stderr.include?('fatal: Needed a single revision')
+
+    # :nocov: when we find a failing example, we can test it
+    raise
+    # :nocov:
   end
 
-  def target = Uncov.configuration.target
+  def target
+    Uncov.configuration.target
+  end
 end

@@ -4,6 +4,8 @@ require 'git'
 
 # common parts for git finders
 module Uncov::Finder::GitBase
+  include Uncov::Cache
+
   protected
 
   def relevant_code_file?(path)
@@ -15,7 +17,9 @@ module Uncov::Finder::GitBase
   end
 
   def open_repo
-    ::Git.open('.')
+    cache(:repo) do
+      ::Git.open('.')
+    end
   rescue ArgumentError => e
     raise Uncov::NotGitRepoError, Uncov.configuration.path if e.message.end_with?(' is not in a git working tree')
 
