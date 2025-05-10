@@ -34,7 +34,7 @@ class Uncov::Report < Uncov::Struct.new(:files)
       if files.empty?
         100.0
       else
-        files.sum(&:coverage) / files.size
+        (files.sum(&:coverage) / files.size).round(2)
       end
     end
   end

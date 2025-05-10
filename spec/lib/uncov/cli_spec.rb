@@ -32,13 +32,13 @@ RSpec.describe Uncov::CLI do
           .and output(<<~OUTPUT).to_stdout_from_any_process
             \e[0;33;49mFound 1 files with uncovered changes:\e[0m
 
-            \e[0;33;49mlib/project.rb -> 75.00% (3 / 4) changes covered, uncovered lines:\e[0m
+            \e[0;33;49mlib/project.rb -> 50.00% (1 / 2) changes covered, uncovered lines:\e[0m
             \e[0;32;49m6: \e[0m
             \e[0;32;49m7: def dec(a)\e[0m
             \e[0;31;49m8:   1\e[0m
             \e[0;32;49m9: end\e[0m
 
-            \e[0;33;49mOverall coverage of changes: 75.00%\e[0m
+            \e[0;33;49mOverall coverage of changes: 50.00%\e[0m
           OUTPUT
         expect(start).to be_falsey
       end
