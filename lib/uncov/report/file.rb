@@ -26,7 +26,7 @@ class Uncov::Report::File < Uncov::Struct.new(:file_name, :lines, :git)
 
   def covered_lines
     cache(:covered_lines) do
-      lines.reject(&:uncov?)
+      lines.select(&:covered?)
     end
   end
 
