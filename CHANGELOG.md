@@ -1,5 +1,13 @@
 # Changelog
 
+## 2025-05-10: [v0.4.2](https://github.com/mpapis/uncov/releases/tag/v0.4.2)
+
+### Patch
+
+- [#42](https://github.com/mpapis/uncov/pull/42): Fix calculating relevant and covered lines, by [@mpapis](https://github.com/mpapis)
+
+
+
 ## 2025-05-05: [v0.4.1](https://github.com/mpapis/uncov/releases/tag/v0.4.1)
 
 ### Patch

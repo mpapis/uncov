@@ -34,7 +34,18 @@ uncov
 ### Display configuration options
 ```bash
 $ uncov -h
-
+Usage: uncov [options]
+    -t, --target TARGET              Target branch for comparison, default: "HEAD"
+    -r, --report TYPE                Report type to generate, one_of: "diff_lines"(default)
+    -o, --output-format FORMAT       Output format, one_of: "terminal"(default)
+    -C, --context LINES_NUMBER       Additional lines context in output, default: 1
+        --test-command COMMAND       Test command that generates SimpleCov, default: "COVERAGE=true bundle exec rake test"
+        --simplecov-file PATH        SimpleCov results file, default: "autodetect"
+        --relevant-files             Relevant files shell filename globing: https://ruby-doc.org/core-3.1.1/File.html#method-c-fnmatch, default: "{{bin,exe,exec}/*,{app,lib}/**/*.{rake,rb},Rakefile}"
+        --debug                      Get some insights, default: false
+    -v, --version                    Show version
+    -h, --help                       Print this help
+uncov 0.4.2 by Michal Papis <mpapis@gmail.com>
 ```
 
 
