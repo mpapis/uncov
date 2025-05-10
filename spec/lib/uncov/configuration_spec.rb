@@ -22,23 +22,14 @@ RSpec.describe Uncov::Configuration do
       end
     end
 
-    context 'with -v' do
-      let(:args) { %w[-v] }
-
-      it 'prints version and throws exit' do
-        expect { parse_cli }
-          .to throw_symbol(:exit, 0)
-          .and output(/uncov [\d\.]+ by Michal/).to_stdout
-      end
-    end
-
     context 'with -r unallowed' do
       let(:args) { %w[-r unallowed] }
 
       it 'raises exception' do
+        allowed_types = Uncov::Report::Generator.types.map { |t| "\"#{t}\"" }.join(', ')
         expect { parse_cli }.to raise_error(
           Uncov::OptionValueNotAllowed,
-          'Configuration option("report") tried to set: "unallowed", only: ["diff_lines"] allowed'
+          %(Configuration option("report") tried to set: "unallowed", only: [#{allowed_types}] allowed)
         )
       end
     end

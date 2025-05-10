@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe Uncov::Report::DiffLines do
+RSpec.describe Uncov::Report::Generator::DiffLines do
   subject(:files) { described_class.files(finder) }
 
   let(:finder) { Uncov::Finder.new(:git_diff) }

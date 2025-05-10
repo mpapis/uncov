@@ -8,18 +8,8 @@ class Uncov::Report < Uncov::Struct.new(:files)
   include Uncov::Cache
 
   class << self
-    def types
-      %w[diff_lines]
-    end
-
-    def build
-      files =
-        case Uncov.configuration.report
-        when 'diff_lines'
-          finder = Uncov::Finder.new(:git_diff)
-          Uncov::Report::DiffLines.files(finder)
-        end
-      new(files:)
+    def generate
+      new(files: Uncov::Report::Generator.generate)
     end
   end
 

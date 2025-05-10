@@ -8,7 +8,9 @@ module Uncov::Finder::SimpleCov
     def files(trigger_files)
       regenerate_report if requires_regeneration?(trigger_files)
       raise_on_missing_coverage_path!
-      coverage.transform_values { |file_coverage| covered_lines(file_coverage) }
+      coverage.transform_values do |file_coverage|
+        covered_lines(file_coverage)
+      end
     end
 
     private
@@ -19,7 +21,12 @@ module Uncov::Finder::SimpleCov
       return false if trigger_files.empty?
 
       coverage_path_mtime = File.mtime(coverage_path)
-      trigger_files.any? { |file_name| File.exist?(file_name) && File.mtime(file_name) > coverage_path_mtime }
+      changed_trigger_files =
+        trigger_files.select do |file_name|
+          File.exist?(file_name) && File.mtime(file_name) > coverage_path_mtime
+        end
+      warn("{changed_trigger_files: #{changed_trigger_files.inspect}}") if Uncov.configuration.debug
+      changed_trigger_files.any?
     end
 
     def regenerate_report
