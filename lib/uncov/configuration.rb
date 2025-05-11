@@ -19,9 +19,10 @@ class Uncov::Configuration
   end
 
   option 'target', 'Target branch for comparison', options: ['-t', '--target TARGET'], default: 'HEAD'
-  option 'report', 'Report type to generate', options: ['-r', '--report TYPE'], default: 'diff_lines', allowed_values: Uncov::Report::Generator.types
+  option 'report', 'Report type to generate',
+         options: ['-r', '--report TYPE'], default: 'diff_lines', allowed_values: -> { Uncov::Report::Generator.types.keys }
   option 'output_format', 'Output format',
-         options: ['-o', '--output-format FORMAT'], default: 'terminal', allowed_values: Uncov::Formatter.formats
+         options: ['-o', '--output-format FORMAT'], default: 'terminal', allowed_values: -> { Uncov::Formatter.formats }
   option 'context', 'Additional lines context in output',
          options: ['-C', '--context LINES_NUMBER'], default: 1, value_parse: lambda(&:to_i)
   option 'test_command', 'Test command that generates SimpleCov',
@@ -72,7 +73,11 @@ class Uncov::Configuration
       puts parser.help
       throw :exit, 0
     end
+    report_type_length = Uncov::Report::Generator.types.keys.map(&:length).max
     parser.separator <<~HELP
+
+      Report TYPE's:
+      #{Uncov::Report::Generator.types.map { |name, config| "#{name.ljust(report_type_length)} - #{config[:description]}" }.join("\n")}
 
       FN_GLOB: shell filename globing -> https://ruby-doc.org/core-3.1.1/File.html#method-c-fnmatch
 

@@ -13,7 +13,7 @@ RSpec.describe Uncov::Finder::GitDiff do
 
       before { File.write('lib/project.rb', "def neg(a)\n  false\nend\n", mode: 'a') }
 
-      it { is_expected.to eq('lib/project.rb' => { 10 => nil, 11 => nil, 12 => nil }) }
+      it { is_expected.to eq('lib/project.rb' => { 14 => nil, 15 => nil, 16 => nil }) }
     end
 
     context 'when comparing with tag v1', branch: 'test' do
@@ -21,7 +21,7 @@ RSpec.describe Uncov::Finder::GitDiff do
 
       before { File.write('lib/project.rb', "def neg(a)\n  false\nend\n", mode: 'a') }
 
-      it { is_expected.to eq('lib/project.rb' => { 10 => nil, 11 => nil, 12 => nil }) }
+      it { is_expected.to eq('lib/project.rb' => { 14 => nil, 15 => nil, 16 => nil }) }
     end
 
     context 'when comparing with HEAD^', branch: 'test' do
@@ -29,7 +29,7 @@ RSpec.describe Uncov::Finder::GitDiff do
 
       before { File.write('lib/project.rb', "def neg(a)\n  false\nend\n", mode: 'a') }
 
-      it { is_expected.to eq('lib/project.rb' => { 10 => nil, 11 => nil, 12 => nil }) }
+      it { is_expected.to eq('lib/project.rb' => { 14 => nil, 15 => nil, 16 => nil }) }
     end
 
     context 'when comparing with branch', branch: 'develop' do

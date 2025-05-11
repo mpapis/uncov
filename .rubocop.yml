@@ -15,10 +15,8 @@ Lint/ElseLayout:
   Enabled: false
 
 Lint/MissingSuper:
-  AllowedParentClasses:
-    - GitError
-    - SimpleCovError
-    - FormatterError
+  Exclude:
+    - lib/uncov.rb
 
 Metrics/ParameterLists:
   Max: 6

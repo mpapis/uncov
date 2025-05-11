@@ -2,16 +2,16 @@
 
 # configuration option
 class Uncov::Configuration::Option
-  attr_reader :name, :description, :options, :default, :allowed_values, :value_parse, :value
+  attr_reader :name, :description, :options, :default, :value_parse, :value
 
   def initialize(name, description, options, default, allowed_values, value_parse)
     @name = name
     @description = description
     @options = Array(options)
     @default = default.freeze
+    @value = default
     @allowed_values = allowed_values
     @value_parse = value_parse
-    self.value = default
   end
 
   def value=(value)
@@ -45,6 +45,14 @@ class Uncov::Configuration::Option
         value.inspect
         # :nocov:
       end
+    end
+  end
+
+  def allowed_values
+    if @allowed_values.respond_to?(:call)
+      @allowed_values = @allowed_values.call
+    else
+      @allowed_values
     end
   end
 end

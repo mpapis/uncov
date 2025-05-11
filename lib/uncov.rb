@@ -31,6 +31,7 @@ module Uncov
   class GitError < Error; end
   class SimpleCovError < Error; end
   class FormatterError < Error; end
+  class ReportError < Error; end
   class OptionValueNotAllowed < ConfigurationError; end
 
   class NotGitRepoError < GitError
@@ -67,5 +68,12 @@ module Uncov
 
     def initialize(output_format) = @output_format = output_format
     def message = "#{output_format.inspect} is not a supported formatter"
+  end
+
+  class UnsupportedReportTypeError < ReportError
+    attr_reader :type
+
+    def initialize(type) = @type = type
+    def message = "#{type.inspect} is not a supported report type"
   end
 end
