@@ -13,15 +13,16 @@ class Uncov::Formatter::Terminal
   end
 
   def output
-    puts "Found #{report.display_files.size} files with uncovered changes:".yellow
+    return puts 'No files to report.'.green if report.files.empty?
+    return puts "All changed files(#{report.files.count}) have 100% test coverage!".green unless report.trigger?
+
+    output_header
     output_files
-    puts
-    puts format(
-      'Overall coverage of changes: %<coverage>.2f%% (%<covered_lines>d / %<relevant_lines>d)',
-      coverage: report.coverage,
-      covered_lines: report.covered_lines_count,
-      relevant_lines: report.relevant_lines_count
-    ).yellow
+    output_summary
+  end
+
+  def output_header
+    puts "Files with uncovered changes: (#{report.display_files.size} / #{report.files.count})".yellow
   end
 
   def output_files
@@ -69,5 +70,15 @@ class Uncov::Formatter::Terminal
 
   def number_length(file_coverage)
     file_coverage.display_lines.last.number.to_s.length
+  end
+
+  def output_summary
+    puts
+    puts format(
+      'Overall coverage of changes: %<coverage>.2f%% (%<covered_lines>d / %<relevant_lines>d)',
+      coverage: report.coverage,
+      covered_lines: report.covered_lines_count,
+      relevant_lines: report.relevant_lines_count
+    ).yellow
   end
 end

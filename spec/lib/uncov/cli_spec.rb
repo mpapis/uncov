@@ -22,7 +22,7 @@ RSpec.describe Uncov::CLI do
     end
   end
 
-  describe 'report diff_lines (default)' do
+  describe 'report DiffLines (default)' do
     context 'when changed file' do
       let(:args) { %w[--target develop --simplecov-file coverage/coverage.json --context 2] }
 
@@ -31,7 +31,7 @@ RSpec.describe Uncov::CLI do
           expect { start }
             .to not_output.to_stderr_from_any_process
             .and output(<<~OUTPUT).to_stdout_from_any_process
-              \e[0;33;49mFound 1 files with uncovered changes:\e[0m
+              \e[0;33;49mFiles with uncovered changes: (1 / 1)\e[0m
 
               \e[0;33;49mlib/project.rb -> 50.00% (1 / 2) changes covered, uncovered lines:\e[0m
               \e[0;32;49m16: \e[0m
@@ -69,8 +69,8 @@ RSpec.describe Uncov::CLI do
     end
   end
 
-  describe 'report diff_files' do
-    let(:args) { %w[--report diff_files --target develop --simplecov-file coverage/coverage.json --context 2] }
+  describe 'report DiffFiles' do
+    let(:args) { %w[--report DiffFiles --target develop --simplecov-file coverage/coverage.json --context 2] }
 
     context 'when missing coverage', branch: 'develop_a_coverage_json' do
       before { File.utime(Time.now, Time.now, 'coverage/coverage.json') }
@@ -79,7 +79,7 @@ RSpec.describe Uncov::CLI do
         expect { start }
           .to not_output.to_stderr_from_any_process
           .and output(<<~OUTPUT).to_stdout_from_any_process
-            \e[0;33;49mFound 1 files with uncovered changes:\e[0m
+            \e[0;33;49mFiles with uncovered changes: (1 / 1)\e[0m
 
             \e[0;33;49mlib/project.rb -> 50.00% (2 / 4) changes covered, uncovered lines:\e[0m
             \e[0;32;49m12: \e[0m
@@ -98,8 +98,8 @@ RSpec.describe Uncov::CLI do
     end
   end
 
-  describe 'report git_files' do
-    let(:args) { %w[--report git_files --target develop --simplecov-file coverage/coverage.json --context 2] }
+  describe 'report GitFiles' do
+    let(:args) { %w[--report GitFiles --target develop --simplecov-file coverage/coverage.json --context 2] }
 
     context 'when missing coverage', branch: 'develop_coverage_json' do
       before { File.utime(Time.now, Time.now, 'coverage/coverage.json') }
@@ -108,7 +108,7 @@ RSpec.describe Uncov::CLI do
         expect { start }
           .to not_output.to_stderr_from_any_process
           .and output(<<~OUTPUT).to_stdout_from_any_process
-            \e[0;33;49mFound 1 files with uncovered changes:\e[0m
+            \e[0;33;49mFiles with uncovered changes: (1 / 1)\e[0m
 
             \e[0;33;49mlib/project.rb -> 50.00% (1 / 2) changes covered, uncovered lines:\e[0m
             \e[0;32;49m12: \e[0m
@@ -123,7 +123,7 @@ RSpec.describe Uncov::CLI do
     end
 
     context 'with --nocov-ignore', branch: 'develop_nocov_coverage' do
-      let(:args) { %w[--report git_files --target develop --simplecov-file coverage/.resultset.json --context 2 --nocov-ignore] }
+      let(:args) { %w[--report GitFiles --target develop --simplecov-file coverage/.resultset.json --context 2 --nocov-ignore] }
 
       before { File.utime(Time.now, Time.now, 'coverage/.resultset.json') }
 
@@ -131,7 +131,7 @@ RSpec.describe Uncov::CLI do
         expect { start }
           .to not_output.to_stderr_from_any_process
           .and output(<<~OUTPUT).to_stdout_from_any_process
-            \e[0;33;49mFound 1 files with uncovered changes:\e[0m
+            \e[0;33;49mFiles with uncovered changes: (1 / 1)\e[0m
 
             \e[0;33;49mlib/project.rb -> 66.67% (4 / 6) changes covered, uncovered lines:\e[0m
             \e[0;32;49m 1: # :nocov:\e[0m
@@ -152,7 +152,7 @@ RSpec.describe Uncov::CLI do
     end
 
     context 'with --nocov-ignore --nocov-covered', branch: 'develop_nocov_coverage' do
-      let(:args) { %w[--report git_files --target develop --simplecov-file coverage/.resultset.json --context 2 --nocov-ignore --nocov-covered] }
+      let(:args) { %w[--report GitFiles --target develop --simplecov-file coverage/.resultset.json --context 2 --nocov-ignore --nocov-covered] }
 
       before { File.utime(Time.now, Time.now, 'coverage/.resultset.json') }
 
@@ -160,7 +160,7 @@ RSpec.describe Uncov::CLI do
         expect { start }
           .to not_output.to_stderr_from_any_process
           .and output(<<~OUTPUT).to_stdout_from_any_process
-            \e[0;33;49mFound 1 files with uncovered changes:\e[0m
+            \e[0;33;49mFiles with uncovered changes: (1 / 1)\e[0m
 
             \e[0;33;49mlib/project.rb -> 44.44% (4 / 9) changes covered, uncovered lines:\e[0m
             \e[0;32;49m 1: # :nocov:\e[0m
@@ -182,7 +182,7 @@ RSpec.describe Uncov::CLI do
     end
 
     context 'with --nocov-covered', branch: 'develop_nocov_coverage' do
-      let(:args) { %w[--report git_files --target develop --simplecov-file coverage/.resultset.json --context 2 --nocov-covered] }
+      let(:args) { %w[--report GitFiles --target develop --simplecov-file coverage/.resultset.json --context 2 --nocov-covered] }
 
       before { File.utime(Time.now, Time.now, 'coverage/.resultset.json') }
 
@@ -190,7 +190,7 @@ RSpec.describe Uncov::CLI do
         expect { start }
           .to not_output.to_stderr_from_any_process
           .and output(<<~OUTPUT).to_stdout_from_any_process
-            \e[0;33;49mFound 1 files with uncovered changes:\e[0m
+            \e[0;33;49mFiles with uncovered changes: (1 / 1)\e[0m
 
             \e[0;33;49mlib/project.rb -> 66.67% (6 / 9) changes covered, uncovered lines:\e[0m
             \e[0;32;49m1: # :nocov:\e[0m
@@ -210,8 +210,8 @@ RSpec.describe Uncov::CLI do
     end
   end
 
-  describe 'report nocov_lines --nocov-covered', branch: 'develop_nocov_coverage' do
-    let(:args) { %w[--report nocov_lines --target develop --simplecov-file coverage/.resultset.json --context 5 --nocov-covered] }
+  describe 'report NocovLines --nocov-covered', branch: 'develop_nocov_coverage' do
+    let(:args) { %w[--report NocovLines --target develop --simplecov-file coverage/.resultset.json --context 5 --nocov-covered] }
 
     before { File.utime(Time.now, Time.now, 'coverage/.resultset.json') }
 
@@ -219,7 +219,7 @@ RSpec.describe Uncov::CLI do
       expect { start }
         .to not_output.to_stderr_from_any_process
         .and output(<<~OUTPUT).to_stdout_from_any_process
-          \e[0;33;49mFound 1 files with uncovered changes:\e[0m
+          \e[0;33;49mFiles with uncovered changes: (1 / 1)\e[0m
 
           \e[0;33;49mlib/project.rb -> 40.00% (2 / 5) changes covered, uncovered lines:\e[0m
           \e[0;32;49m 1: # :nocov:\e[0m

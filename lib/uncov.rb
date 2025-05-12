@@ -21,6 +21,10 @@ module Uncov
     def configuration_reset!
       @configuration = Configuration.new
     end
+
+    def plugins
+      @plugins ||= Pluginator.find('uncov', extends: ['plugins_map'])
+    end
   end
 
   class Error < StandardError

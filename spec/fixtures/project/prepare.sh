@@ -65,6 +65,7 @@ EOF
 git add .
 git commit -m "Empty"
 
+
 git checkout -b develop
 
 add_to_file lib/project.rb <<EOF

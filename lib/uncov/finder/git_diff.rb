@@ -15,15 +15,19 @@ class Uncov::Finder::GitDiff
     end
   end
 
-  def test_files
-    cache(:test_files) do
-      all_files_diff.filter_map do |file_diff|
-        [file_diff.path, true] if relevant_test_file?(file_diff.path) && File.exist?(file_diff.path)
-      end.to_h
-    end
+  def simple_cov_trigger_files
+    code_files.keys + test_files
   end
 
   private
+
+  def test_files
+    cache(:test_files) do
+      all_files_diff.filter_map do |file_diff|
+        file_diff.path if relevant_test_file?(file_diff.path) && File.exist?(file_diff.path)
+      end
+    end
+  end
 
   def all_files_diff
     cache(:all_files) do
