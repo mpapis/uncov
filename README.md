@@ -36,16 +36,33 @@ uncov
 $ uncov -h
 Usage: uncov [options]
     -t, --target TARGET              Target branch for comparison, default: "HEAD"
-    -r, --report TYPE                Report type to generate, one_of: "diff_lines"(default)
+    -r, --report FILTER              Report filter to generate file/line list, one_of: "diff_files", "diff_lines"(default), "git_files", "nocov_lines"
     -o, --output-format FORMAT       Output format, one_of: "terminal"(default)
     -C, --context LINES_NUMBER       Additional lines context in output, default: 1
         --test-command COMMAND       Test command that generates SimpleCov, default: "COVERAGE=true bundle exec rake test"
         --simplecov-file PATH        SimpleCov results file, default: "autodetect"
-        --relevant-files             Relevant files shell filename globing: https://ruby-doc.org/core-3.1.1/File.html#method-c-fnmatch, default: "{{bin,exe,exec}/*,{app,lib}/**/*.{rake,rb},Rakefile}"
+        --relevant-files FN_GLOB     Only show uncov for matching code files AND trigger tests if matching code files are newer than the report, default: "{{bin,exe,exec}/*,{app,lib}/**/*.{rake,rb},Rakefile}"
+        --relevant-tests FN_GLOB     Trigger tests if matching test files are newer than the report, default: "{test,spec}/**/*_{test,spec}.rb"
+        --nocov-ignore               Ignore :nocov: markers - consider all lines, default: false
+        --nocov-covered              Report :nocov: lines that have coverage, default: false
         --debug                      Get some insights, default: false
-    -v, --version                    Show version
     -h, --help                       Print this help
-uncov 0.4.2 by Michal Papis <mpapis@gmail.com>
+
+Report FILTERs:
+diff_files  - Report missing coverage on added/changed files in the git diff
+diff_lines  - Report missing coverage on added lines in the git diff
+git_files   - Report missing coverage on files tracked with git
+nocov_lines - Report coverage on nocov lines, requires one or both: --nocov-ignore / --nocov-covered
+
+Report FILTERs take NOTICE:
+git*/diff*  - filters will not consider new files unless added to the git index with `git add`.
+nocov*      - filters/flags only work with coverage/.resultset.json SimpleCov files,
+              coverage.json does not provide the information needed.
+
+FN_GLOB: shell filename globing -> https://ruby-doc.org/core-3.1.1/File.html#method-c-fnmatch
+         in bash: `shopt -s extglob dotglob globstar` and test with `ls {app,lib}/**/*.rb`
+
+uncov 0.5.0 by Michal Papis <mpapis@gmail.com>
 ```
 
 

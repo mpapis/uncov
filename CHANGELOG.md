@@ -1,5 +1,19 @@
 # Changelog
 
+## 2025-05-12: [v0.5.0](https://github.com/mpapis/uncov/releases/tag/v0.5.0)
+
+### Minor
+
+- [#43](https://github.com/mpapis/uncov/pull/43): Trigger tests on test_file_changes. Add git_files report generator., by [@mpapis](https://github.com/mpapis)
+- [#45](https://github.com/mpapis/uncov/pull/45): Add diff_files report type, by [@mpapis](https://github.com/mpapis)
+- [#46](https://github.com/mpapis/uncov/pull/46): Add nocov report filter and flags, by [@mpapis](https://github.com/mpapis)
+
+### Patch
+
+- [#44](https://github.com/mpapis/uncov/pull/44): Allow any git revision specification for target, by [@mpapis](https://github.com/mpapis)
+
+
+
 ## 2025-05-10: [v0.4.2](https://github.com/mpapis/uncov/releases/tag/v0.4.2)
 
 ### Patch
