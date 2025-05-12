@@ -24,10 +24,10 @@ RSpec.describe Uncov::Report::Generator::DiffLines do
             file_name: 'lib/project.rb',
             git: true,
             lines: [
-              Uncov::Report::File::Line.new(number: 6, simple_cov: nil, no_cov: nil, context: false, git_diff: true, content: ''),
-              Uncov::Report::File::Line.new(number: 7, simple_cov: true, no_cov: nil, context: true, git_diff: true, content: 'def dec(a)'),
-              Uncov::Report::File::Line.new(number: 8, simple_cov: false, no_cov: nil, context: false, git_diff: true, content: '  1'),
-              Uncov::Report::File::Line.new(number: 9, simple_cov: nil, no_cov: nil, context: true, git_diff: true, content: 'end')
+              Uncov::Report::File::Line.new(number: 12, simple_cov: nil, no_cov: nil, context: false, git_diff: true, content: ''),
+              Uncov::Report::File::Line.new(number: 13, simple_cov: true, no_cov: nil, context: true, git_diff: true, content: 'def dec(a)'),
+              Uncov::Report::File::Line.new(number: 14, simple_cov: false, no_cov: nil, context: false, git_diff: true, content: '  1'),
+              Uncov::Report::File::Line.new(number: 15, simple_cov: nil, no_cov: nil, context: true, git_diff: true, content: 'end')
             ]
           )
         ]
@@ -44,11 +44,11 @@ RSpec.describe Uncov::Report::Generator::DiffLines do
               file_name: 'lib/project.rb',
               git: true,
               lines: [
-                Uncov::Report::File::Line.new(number: 5, simple_cov: nil, no_cov: true, context: true, git_diff: false, content: '# :nocov:'),
-                Uncov::Report::File::Line.new(number: 6, simple_cov: nil, no_cov: nil, context: true, git_diff: true, content: ''),
-                Uncov::Report::File::Line.new(number: 7, simple_cov: true, no_cov: nil, context: true, git_diff: true, content: 'def dec(a)'),
-                Uncov::Report::File::Line.new(number: 8, simple_cov: false, no_cov: nil, context: false, git_diff: true, content: '  1'),
-                Uncov::Report::File::Line.new(number: 9, simple_cov: nil, no_cov: nil, context: true, git_diff: true, content: 'end')
+                Uncov::Report::File::Line.new(number: 11, simple_cov: nil, no_cov: true, context: true, git_diff: false, content: '# :nocov:'),
+                Uncov::Report::File::Line.new(number: 12, simple_cov: nil, no_cov: nil, context: true, git_diff: true, content: ''),
+                Uncov::Report::File::Line.new(number: 13, simple_cov: true, no_cov: nil, context: true, git_diff: true, content: 'def dec(a)'),
+                Uncov::Report::File::Line.new(number: 14, simple_cov: false, no_cov: nil, context: false, git_diff: true, content: '  1'),
+                Uncov::Report::File::Line.new(number: 15, simple_cov: nil, no_cov: nil, context: true, git_diff: true, content: 'end')
               ]
             )
           ]

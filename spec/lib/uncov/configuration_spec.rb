@@ -26,7 +26,7 @@ RSpec.describe Uncov::Configuration do
       let(:args) { %w[-r unallowed] }
 
       it 'raises exception' do
-        allowed_types = Uncov::Report::Generator.types.keys.map { |t| "\"#{t}\"" }.join(', ')
+        allowed_types = Uncov::Report::Generator.filters.keys.map { |t| "\"#{t}\"" }.join(', ')
         expect { parse_cli }.to raise_error(
           Uncov::OptionValueNotAllowed,
           %(Configuration option("report") tried to set: "unallowed", only: [#{allowed_types}] allowed)

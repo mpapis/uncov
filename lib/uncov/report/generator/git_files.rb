@@ -34,7 +34,7 @@ module Uncov::Report::Generator::GitFiles
 
       line_numbers =
         lines_hash.filter_map do |line_number, line|
-          line_number if line.uncov?
+          line_number if line.trigger?
         end
       all_line_numbers = lines_hash.keys
       context_line_numbers = Uncov::Report::Context.calculate(all_line_numbers, line_numbers, Uncov.configuration.context)

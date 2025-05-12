@@ -6,3 +6,4 @@ COVERAGE=true bundle exec rspec
 coverage/.resultset.json
 --context
 2
+--nocov-covered

@@ -8,7 +8,7 @@ class Uncov::CLI
     Uncov.configure(args)
     report = Uncov::Report.generate
     Uncov::Formatter.output(report)
-    !report.uncov?
+    !report.trigger?
   rescue StandardError => e
     raise if Uncov.configuration.debug
 

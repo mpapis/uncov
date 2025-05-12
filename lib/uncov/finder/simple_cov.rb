@@ -16,10 +16,18 @@ module Uncov::Finder::SimpleCov
     private
 
     def requires_regeneration?(trigger_files)
+      if Uncov.configuration.debug
+        warn("{coverage_path: #{coverage_path}(#{coverage_path && File.exist?(coverage_path) ? 'exist' : 'missing'})}")
+        warn("{trigger_files: #{trigger_files.inspect}}")
+      end
       return true unless coverage_path
       return true unless File.exist?(coverage_path)
       return false if trigger_files.empty?
 
+      changed_files?(trigger_files)
+    end
+
+    def changed_files?(trigger_files)
       coverage_path_mtime = File.mtime(coverage_path)
       changed_trigger_files =
         trigger_files.select do |file_name|

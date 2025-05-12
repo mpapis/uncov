@@ -41,9 +41,7 @@ class Uncov::Configuration::Option
       if value == default
         "#{value.inspect}(default)"
       else
-        # :nocov: for now as there is no case yet in Configuration
         value.inspect
-        # :nocov:
       end
     end
   end

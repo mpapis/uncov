@@ -32,6 +32,12 @@ save_file lib/project.rb <<EOF
 def inc(a)
   a + 1
 end
+
+def prec(str)
+  return 'a' if str == 'b'
+
+  'b'
+end
 # :nocov:
 EOF
 
@@ -107,12 +113,9 @@ git commit -m 'Failing coverage.json'
 git checkout develop_a
 git checkout -b test
 
-save_file spec/lib/project_spec.rb <<EOF
-require_relative '../../lib/project'
-RSpec.describe 'project' do
-  it { expect(dec(2)).to eq(1) }
-  it { expect(succ('a')).to eq('b') }
-end
+add_to_file spec/lib/project_spec.rb <<EOF
+RSpec.describe('#dec') { it { expect(dec(2)).to eq(1) } }
+RSpec.describe('#succ') { it { expect(succ('a')).to eq('b') } }
 EOF
 
 git commit -a -m "Test"
@@ -138,3 +141,13 @@ EOF
 COVERAGE=1 rspec
 git add .gitignore coverage/.resultset.json
 git commit -m 'Success .resultset.json'
+
+
+git checkout -b develop_nocov_coverage
+
+add_to_file spec/lib/project_spec.rb <<EOF
+RSpec.describe('#prec') { it { expect(prec('b')).to eq('a') } }
+EOF
+COVERAGE=1 rspec
+git add spec/lib/project_spec.rb coverage/.resultset.json
+git commit -m 'Nocov covered with coverage.json'

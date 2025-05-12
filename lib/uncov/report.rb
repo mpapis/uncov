@@ -13,23 +13,32 @@ class Uncov::Report < Uncov::Struct.new(:files)
     end
   end
 
-  def uncovered_files
-    cache(:uncovered_files) do
-      files.select(&:uncov?)
+  def display_files
+    cache(:display_files) do
+      files.select(&:display?)
     end
   end
 
   def coverage
     cache(:coverage) do
-      if files.empty?
+      if relevant_lines_count.zero?
         100.0
       else
-        (files.sum(&:coverage) / files.size).round(2)
+        (covered_lines_count.to_f / relevant_lines_count * 100).round(2)
       end
     end
   end
 
-  def uncov?
-    uncovered_files.any?
+  def relevant_lines_count = files.sum(&:relevant_lines_count)
+  def covered_lines_count = files.sum(&:covered_lines_count)
+
+  def trigger?
+    cache(:trigger) do
+      files.any?(&:trigger?)
+    end
+  end
+
+  def display?
+    display_files.any?
   end
 end

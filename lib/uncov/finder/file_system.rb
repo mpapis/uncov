@@ -4,7 +4,11 @@
 class Uncov::Finder::FileSystem
   include Uncov::Cache
 
-  def files = all_files.to_h { |file_name| [file_name, lines_proc(file_name)] }
+  def files
+    all_files.to_h do |file_name|
+      [file_name, lines(file_name)]
+    end
+  end
 
   private
 
@@ -12,7 +16,11 @@ class Uncov::Finder::FileSystem
     Dir.glob(Uncov.configuration.relevant_files, Uncov::Configuration::FILE_MATCH_FLAGS).select { |f| File.file?(f) }
   end
 
-  def lines_proc(file_name) = -> { cache(file_name) { read_lines(file_name) } }
+  def lines(file_name)
+    cache(file_name) do
+      read_lines(file_name)
+    end
+  end
 
   def read_lines(file_name)
     File.readlines(file_name).each_with_index.to_h { |line, line_index| [line_index + 1, line.rstrip] }
