@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 require 'colorize'
-require 'forwardable'
 
 # print report to terminal with colors
 class Uncov::Formatter::Terminal
@@ -14,14 +13,19 @@ class Uncov::Formatter::Terminal
   end
 
   def output
-    puts "Found #{report.uncovered_files.size} files with uncovered changes:".yellow
+    puts "Found #{report.display_files.size} files with uncovered changes:".yellow
     output_files
     puts
-    puts format('Overall coverage of changes: %.2f%%', report.coverage).yellow
+    puts format(
+      'Overall coverage of changes: %<coverage>.2f%% (%<covered_lines>d / %<relevant_lines>d)',
+      coverage: report.coverage,
+      covered_lines: report.covered_lines_count,
+      relevant_lines: report.relevant_lines_count
+    ).yellow
   end
 
   def output_files
-    report.uncovered_files.each do |file_coverage|
+    report.display_files.each do |file_coverage|
       output_file(file_coverage)
     end
   end
@@ -40,8 +44,8 @@ class Uncov::Formatter::Terminal
       '%<name>s -> %<coverage>.2f%% (%<covered_lines>d / %<relevant_lines>d) changes covered, uncovered lines:',
       name: file_coverage.file_name,
       coverage: file_coverage.coverage,
-      covered_lines: file_coverage.covered_lines.count,
-      relevant_lines: file_coverage.relevant_lines.count
+      covered_lines: file_coverage.covered_lines_count,
+      relevant_lines: file_coverage.relevant_lines_count
     ).yellow
   end
 
@@ -50,6 +54,8 @@ class Uncov::Formatter::Terminal
       puts format_line(line, max).red
     elsif line.context
       puts format_line(line, max).green
+    elsif line.nocov_covered?
+      puts format_line(line, max).blue
     else
       # :nocov:
       raise 'unknown display line' # unreachable code

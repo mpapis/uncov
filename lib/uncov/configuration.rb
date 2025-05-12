@@ -6,6 +6,7 @@ require_relative 'report/generator'
 # handle configuration for uncov
 class Uncov::Configuration
   CONFIG_FILE = '.uncov'
+  # equivalent of `shopt -s extglob dotglob globstar` for testing with `bash` & `ls`
   FILE_MATCH_FLAGS = File::FNM_EXTGLOB | File::FNM_PATHNAME | File::FNM_DOTMATCH
 
   class << self
@@ -19,8 +20,8 @@ class Uncov::Configuration
   end
 
   option 'target', 'Target branch for comparison', options: ['-t', '--target TARGET'], default: 'HEAD'
-  option 'report', 'Report type to generate',
-         options: ['-r', '--report TYPE'], default: 'diff_lines', allowed_values: -> { Uncov::Report::Generator.types.keys }
+  option 'report', 'Report filter to generate file/line list',
+         options: ['-r', '--report FILTER'], default: 'diff_lines', allowed_values: -> { Uncov::Report::Generator.filters.keys }
   option 'output_format', 'Output format',
          options: ['-o', '--output-format FORMAT'], default: 'terminal', allowed_values: -> { Uncov::Formatter.formats }
   option 'context', 'Additional lines context in output',
@@ -31,7 +32,11 @@ class Uncov::Configuration
   option 'relevant_files', 'Only show uncov for matching code files AND trigger tests if matching code files are newer than the report',
          options: '--relevant-files FN_GLOB', default: '{{bin,exe,exec}/*,{app,lib}/**/*.{rake,rb},Rakefile}'
   option 'relevant_tests', 'Trigger tests if matching test files are newer than the report',
-         options: '--relevant-tests FN_GLOB', default: '{test,spec}/**/*'
+         options: '--relevant-tests FN_GLOB', default: '{test,spec}/**/*_{test,spec}.rb'
+  option 'nocov_ignore', 'Ignore :nocov: markers - consider all lines',
+         options: '--nocov-ignore', default: false, value_parse: ->(_value) { true }
+  option 'nocov_covered', 'Report :nocov: lines that have coverage',
+         options: '--nocov-covered', default: false, value_parse: ->(_value) { true }
   option 'debug', 'Get some insights', options: '--debug', default: false, value_parse: ->(_value) { true }
 
   def initialize
@@ -73,17 +78,35 @@ class Uncov::Configuration
       puts parser.help
       throw :exit, 0
     end
-    report_type_length = Uncov::Report::Generator.types.keys.map(&:length).max
+    footer_extras(parser)
+  end
+
+  def footer_extras(parser)
     parser.separator <<~HELP
 
-      Report TYPE's:
-      #{Uncov::Report::Generator.types.map { |name, config| "#{name.ljust(report_type_length)} - #{config[:description]}" }.join("\n")}
+      Report FILTER's:
+      #{footer_extras_types}
+
+      Report FILTER's take NOTICE:
+      git*/diff*  - filters will not consider new files unless added to the git index with `git add`.
+      nocov*      - filters/flags only work with coverage/.resultset.json SimpleCov files,
+                    coverage.json does not provide the information needed.
 
       FN_GLOB: shell filename globing -> https://ruby-doc.org/core-3.1.1/File.html#method-c-fnmatch
+               in bash: `shopt -s extglob dotglob globstar` and test with `ls {app,lib}/**/*.rb`
 
       uncov #{Uncov::VERSION} by Michal Papis <mpapis@gmail.com>
     HELP
   end
 
-  def options = @options ||= {}
+  def footer_extras_types
+    report_type_length = Uncov::Report::Generator.filters.keys.map(&:length).max
+    Uncov::Report::Generator.filters.map do |name, config|
+      "#{name.ljust(report_type_length)} - #{config[:description]}"
+    end.join("\n")
+  end
+
+  def options
+    @options ||= {}
+  end
 end

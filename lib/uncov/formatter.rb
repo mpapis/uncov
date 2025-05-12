@@ -8,7 +8,7 @@ module Uncov::Formatter
     def output(report)
       if report.files.empty?
         return puts 'No files to report.'.green
-      elsif !report.uncov?
+      elsif !report.trigger?
         return puts "All changed files(#{report.files.count}) have 100% test coverage!".green
       end
 

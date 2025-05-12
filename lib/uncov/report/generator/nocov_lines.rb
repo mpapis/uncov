@@ -1,15 +1,17 @@
 # frozen_string_literal: true
 
 # report only files lines from the diff
-module Uncov::Report::Generator::DiffLines
-  Uncov::Report::Generator.register(self, :git_diff, 'Report missing coverage on added lines in the git diff')
+module Uncov::Report::Generator::NocovLines
+  Uncov::Report::Generator.register(self, :file_system, 'Report coverage on nocov lines, requires one or both: --nocov-ignore / --nocov-covered')
 
   class << self
     def files(finder)
-      finder.git_diff_file_names.map do |file_name|
+      finder.no_cov_file_names.filter_map do |file_name|
+        next if finder.no_cov_file_lines(file_name).empty?
+
         Uncov::Report::File.new(
           file_name:,
-          git: true,
+          git: finder.git_file?(file_name),
           lines: lines(finder, file_name)
         )
       end
@@ -18,13 +20,13 @@ module Uncov::Report::Generator::DiffLines
     private
 
     def lines(finder, file_name)
-      lines_hash = git_diff_files_lines(finder, file_name)
+      lines_hash = nocov_files_lines(finder, file_name)
       add_context(finder, file_name, lines_hash)
       lines_hash.sort.to_h.values
     end
 
-    def git_diff_files_lines(finder, file_name)
-      finder.git_diff_file_lines(file_name).keys.to_h do |line_number|
+    def nocov_files_lines(finder, file_name)
+      finder.no_cov_file_lines(file_name).keys.to_h do |line_number|
         [line_number, new_line(finder, file_name, line_number)]
       end
     end

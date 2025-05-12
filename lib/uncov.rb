@@ -29,7 +29,8 @@ module Uncov
 
   class ConfigurationError < Error; end
   class GitError < Error; end
-  class SimpleCovError < Error; end
+  class FinderError < Error; end
+  class SimpleCovError < FinderError; end
   class FormatterError < Error; end
   class ReportError < Error; end
   class OptionValueNotAllowed < ConfigurationError; end
@@ -46,6 +47,13 @@ module Uncov
 
     def initialize(target_branch) = @target_branch = target_branch
     def message = "Git target #{target_branch.inspect} not found locally"
+  end
+
+  class UnsupportedSimpleCovTriggerError < FinderError
+    attr_reader :trigger
+
+    def initialize(trigger) = @trigger = trigger
+    def message = "#{trigger.inspect} is not a supported simple_cov_trigger type"
   end
 
   class FailedToGenerateReport < SimpleCovError

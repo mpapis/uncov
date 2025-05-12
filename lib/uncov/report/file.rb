@@ -6,27 +6,27 @@ class Uncov::Report::File < Uncov::Struct.new(:file_name, :lines, :git)
 
   def coverage
     cache(:coverage) do
-      if relevant_lines.count.zero?
+      if relevant_lines_count.zero?
         100.0
       else
-        (covered_lines.count.to_f / relevant_lines.count * 100).round(2)
+        (covered_lines_count.to_f / relevant_lines_count * 100).round(2)
       end
     end
   end
 
-  def uncov?
-    uncov_lines.any?
-  end
-
-  def uncov_lines
-    cache(:uncov_lines) do
-      lines.select(&:uncov?)
+  def trigger?
+    cache(:trigger) do
+      lines.any?(&:trigger?)
     end
   end
 
-  def covered_lines
-    cache(:covered_lines) do
-      lines.select(&:covered?)
+  def display?
+    display_lines.any?
+  end
+
+  def covered_lines_count
+    cache(:covered_lines_count) do
+      lines.count(&:covered?)
     end
   end
 
@@ -36,9 +36,9 @@ class Uncov::Report::File < Uncov::Struct.new(:file_name, :lines, :git)
     end
   end
 
-  def relevant_lines
-    cache(:relevant_lines) do
-      lines.select(&:relevant?)
+  def relevant_lines_count
+    cache(:relevant_lines_count) do
+      lines.count(&:relevant?)
     end
   end
 end
