@@ -82,12 +82,13 @@ class Uncov::Configuration
   end
 
   def footer_extras(parser)
+    # TODO: the release workflow does not like ' in help, please avoid it - or fix the workflow
     parser.separator <<~HELP
 
-      Report FILTER's:
+      Report FILTERs:
       #{footer_extras_types}
 
-      Report FILTER's take NOTICE:
+      Report FILTERs take NOTICE:
       git*/diff*  - filters will not consider new files unless added to the git index with `git add`.
       nocov*      - filters/flags only work with coverage/.resultset.json SimpleCov files,
                     coverage.json does not provide the information needed.
