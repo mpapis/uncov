@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 require_relative 'formatter'
-require_relative 'report/generator'
+require_relative 'report/filters'
 
 # handle configuration for uncov
 class Uncov::Configuration
@@ -21,9 +21,9 @@ class Uncov::Configuration
 
   option 'target', 'Target branch for comparison', options: ['-t', '--target TARGET'], default: 'HEAD'
   option 'report', 'Report filter to generate file/line list',
-         options: ['-r', '--report FILTER'], default: 'diff_lines', allowed_values: -> { Uncov::Report::Generator.filters.keys }
+         options: ['-r', '--report FILTER'], default: 'DiffLines', allowed_values: -> { Uncov::Report::Filters.filters.keys }
   option 'output_format', 'Output format',
-         options: ['-o', '--output-format FORMAT'], default: 'terminal', allowed_values: -> { Uncov::Formatter.formats }
+         options: ['-o', '--output-format FORMAT'], default: 'Terminal', allowed_values: -> { Uncov::Formatter.formatters.keys }
   option 'context', 'Additional lines context in output',
          options: ['-C', '--context LINES_NUMBER'], default: 1, value_parse: lambda(&:to_i)
   option 'test_command', 'Test command that generates SimpleCov',
@@ -101,9 +101,9 @@ class Uncov::Configuration
   end
 
   def footer_extras_types
-    report_type_length = Uncov::Report::Generator.filters.keys.map(&:length).max
-    Uncov::Report::Generator.filters.map do |name, config|
-      "#{name.ljust(report_type_length)} - #{config[:description]}"
+    report_type_length = Uncov::Report::Filters.filters.keys.map(&:length).max
+    Uncov::Report::Filters.filters.map do |name, filter|
+      format("%#{report_type_length}s - %s", name, filter.description)
     end.join("\n")
   end
 

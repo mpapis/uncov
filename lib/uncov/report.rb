@@ -9,7 +9,7 @@ class Uncov::Report < Uncov::Struct.new(:files)
 
   class << self
     def generate
-      new(files: Uncov::Report::Generator.generate)
+      new(files: Uncov::Report::Filters.files)
     end
   end
 

@@ -6,11 +6,11 @@ RSpec.describe Uncov::Formatter do
   context 'when unknown output_format' do
     let(:report) { Uncov::Report.new(files: [Uncov::Report::File.new(lines: [Uncov::Report::File::Line.new(simple_cov: false)])]) }
 
-    before { allow(Uncov.configuration).to receive(:output_format).and_return(:unknown) }
+    before { allow(Uncov.configuration).to receive(:output_format).and_return('unknown') }
 
     it do
       expect { formatter_output }
-        .to raise_error(Uncov::UnsupportedFormatterError, ':unknown is not a supported formatter')
+        .to raise_error(Uncov::UnsupportedFormatterError, '"unknown" is not a supported formatter')
         .and not_output.to_stdout_from_any_process
         .and not_output.to_stderr_from_any_process
     end
@@ -19,7 +19,7 @@ RSpec.describe Uncov::Formatter do
   context 'when all covered' do
     let(:report) { Uncov::Report.new(files: [Uncov::Report::File.new(lines: [Uncov::Report::File::Line.new(simple_cov: true)])]) }
 
-    before { allow(Uncov.configuration).to receive(:output_format).and_return(:unknown) }
+    before { allow(Uncov.configuration).to receive(:output_format).and_return('Terminal') }
 
     it do
       expect { formatter_output }
@@ -31,7 +31,7 @@ RSpec.describe Uncov::Formatter do
   context 'when no files' do
     let(:report) { Uncov::Report.new(files: []) }
 
-    before { allow(Uncov.configuration).to receive(:output_format).and_return(:unknown) }
+    before { allow(Uncov.configuration).to receive(:output_format).and_return('Terminal') }
 
     it do
       expect { formatter_output }

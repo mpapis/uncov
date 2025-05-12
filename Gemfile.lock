@@ -7,6 +7,7 @@ PATH
       git_diff_parser (~> 4.0)
       logger (~> 1.7)
       optparse
+      pluginator (~> 1.5)
 
 GEM
   remote: https://rubygems.org/
@@ -56,6 +57,7 @@ GEM
     parser (3.3.8.0)
       ast (~> 2.4.1)
       racc
+    pluginator (1.5.0)
     prism (1.4.0)
     process_executer (1.3.0)
     pry (0.15.2)

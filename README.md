@@ -13,6 +13,8 @@ Uncov uses `git diff` to detect changes and `simplecov` reports to detect uncove
 - Identify changed Ruby files
 - Run tests automatically for (changed) relevant files
 - Print report of uncovered lines in (changed) files
+- Print report of covered :nocov: lines in (changed) files
+- Extensible with gem plugins
 
 
 ## Installation
@@ -78,6 +80,16 @@ develop
 COVERAGE=1 rspec
 ```
 
+
+## Plugins
+Uncov uses [pluginator](https://github.com/rvm/pluginator) to load plugins.
+
+See [lib/plugins/uncov](lib/plugins/uncov) for default plugins.
+
+To create your own plugin, create a gem with a `lib/plugins/uncov/...` structure - same as uncov has,
+the plugins will be loaded automatically.
+
+When you use uncov from a Gemfile then the new gam has to be added there too.
 
 ## Using in CI
 `uncov` uses itself to check new missing code coverage [.github/workflows/ci.yml](.github/workflows/ci.yml),
