@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 # collect nocov information from files
-class Uncov::Finder::NoCov
+class Uncov::Finder::Nocov
   def files(all_files)
     all_files.files.transform_values do |lines|
       nocov_lines(lines)

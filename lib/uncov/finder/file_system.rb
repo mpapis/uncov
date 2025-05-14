@@ -10,7 +10,7 @@ class Uncov::Finder::FileSystem
     end
   end
 
-  def simple_cov_trigger_files
+  def simplecov_trigger_files
     code_files.keys + test_files
   end
 

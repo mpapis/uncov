@@ -1,16 +1,16 @@
 # frozen_string_literal: true
 
-# report only files lines from the diff
-module Uncov::Report::Filters::GitFiles
+# report all files lines from the file system
+module Uncov::Report::Filters::FileSystem
   class << self
-    def description = 'Report missing coverage on files tracked with git'
-    def simplecov_trigger = :git
+    def description = 'Report missing coverage on file system'
+    def simplecov_trigger = :file_system
 
     def files(finder)
-      finder.git_files.file_names.map do |file_name|
+      finder.file_system_files.file_names.map do |file_name|
         Uncov::Report::File.new(
           file_name:,
-          git: true,
+          git: finder.git_files.file?(file_name),
           lines: lines(finder, file_name)
         )
       end

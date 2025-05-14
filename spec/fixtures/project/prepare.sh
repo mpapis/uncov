@@ -144,7 +144,7 @@ git add .gitignore coverage/.resultset.json
 git commit -m 'Success .resultset.json'
 
 
-git checkout -b develop_nocov_coverage
+git checkout -b test_nocov_coverage
 
 add_to_file spec/lib/project_spec.rb <<EOF
 RSpec.describe('#prec') { it { expect(prec('b')).to eq('a') } }

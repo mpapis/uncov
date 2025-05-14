@@ -34,7 +34,7 @@ module Uncov
   class ConfigurationError < Error; end
   class GitError < Error; end
   class FinderError < Error; end
-  class SimpleCovError < FinderError; end
+  class SimplecovError < FinderError; end
   class FormatterError < Error; end
   class ReportError < Error; end
   class OptionValueNotAllowed < ConfigurationError; end
@@ -53,25 +53,25 @@ module Uncov
     def message = "Git target #{target_branch.inspect} not found locally"
   end
 
-  class UnsupportedSimpleCovTriggerError < FinderError
+  class UnsupportedSimplecovTriggerError < FinderError
     attr_reader :trigger
 
     def initialize(trigger) = @trigger = trigger
-    def message = "#{trigger.inspect} is not a supported simple_cov_trigger type"
+    def message = "#{trigger.inspect} is not a supported simplecov_trigger type"
   end
 
-  class FailedToGenerateReport < SimpleCovError
+  class FailedToGenerateReport < SimplecovError
     def message = cause.message
   end
 
-  class MissingSimpleCovReport < SimpleCovError
+  class MissingSimplecovReport < SimplecovError
     attr_reader :coverage_path
 
     def initialize(coverage_path) = @coverage_path = coverage_path
     def message = "SimpleCov results not found at #{coverage_path.inspect}"
   end
 
-  class AutodetectSimpleCovPathError < SimpleCovError
+  class AutodetectSimplecovPathError < SimplecovError
     def message = 'Could not autodetect coverage report path'
   end
 

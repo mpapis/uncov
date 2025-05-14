@@ -14,7 +14,7 @@ module Uncov::Report::Filters
       raise Uncov::UnsupportedReportTypeError, Uncov.configuration.report unless filters.key?(Uncov.configuration.report)
 
       filter = filters[Uncov.configuration.report]
-      filter.files(Uncov::Finder.new(filter.simple_cov_trigger))
+      filter.files(Uncov::Finder.new(filter.simplecov_trigger))
     end
   end
 end

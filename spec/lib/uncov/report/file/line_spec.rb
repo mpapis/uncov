@@ -1,20 +1,20 @@
 # frozen_string_literal: true
 
 RSpec.describe Uncov::Report::File::Line do
-  subject(:line) { described_class.new(number:, content:, simple_cov:, no_cov:, context:, git_diff:) }
+  subject(:line) { described_class.new(number:, content:, simplecov:, nocov:, context:, git_diff:) }
 
   let(:number) { 1 }
   let(:content) { 'line content' }
-  let(:simple_cov) { true }
-  let(:no_cov) { nil }
+  let(:simplecov) { true }
+  let(:nocov) { nil }
   let(:context) { 1 }
   let(:git_diff) { nil }
 
-  describe '#no_cov' do
-    subject { line.no_cov }
+  describe '#nocov' do
+    subject { line.nocov }
 
-    context 'with no_cov' do
-      let(:no_cov) { true }
+    context 'with nocov' do
+      let(:nocov) { true }
 
       context 'with nocov_ignore true' do
         before { allow(Uncov.configuration).to receive(:nocov_ignore).and_return(true) }
@@ -29,8 +29,8 @@ RSpec.describe Uncov::Report::File::Line do
       end
     end
 
-    context 'without no_cov' do
-      let(:no_cov) { nil }
+    context 'without nocov' do
+      let(:nocov) { nil }
 
       context 'with nocov_ignore true' do
         before { allow(Uncov.configuration).to receive(:nocov_ignore).and_return(true) }
@@ -49,49 +49,49 @@ RSpec.describe Uncov::Report::File::Line do
   describe '#uncov?' do
     subject { line.uncov? }
 
-    context 'with simple_cov true' do
-      let(:simple_cov) { true }
+    context 'with simplecov true' do
+      let(:simplecov) { true }
 
-      context 'with no_cov' do
-        let(:no_cov) { true }
+      context 'with nocov' do
+        let(:nocov) { true }
 
         it { is_expected.to be_falsy }
       end
 
-      context 'without no_cov' do
-        let(:no_cov) { nil }
+      context 'without nocov' do
+        let(:nocov) { nil }
 
         it { is_expected.to be_falsy }
       end
     end
 
-    context 'with simple_cov false' do
-      let(:simple_cov) { false }
+    context 'with simplecov false' do
+      let(:simplecov) { false }
 
-      context 'with no_cov' do
-        let(:no_cov) { true }
+      context 'with nocov' do
+        let(:nocov) { true }
 
         it { is_expected.to be_falsy }
       end
 
-      context 'without no_cov' do
-        let(:no_cov) { nil }
+      context 'without nocov' do
+        let(:nocov) { nil }
 
         it { is_expected.to be_truthy }
       end
     end
 
-    context 'without simple_cov' do
-      let(:simple_cov) { nil }
+    context 'without simplecov' do
+      let(:simplecov) { nil }
 
-      context 'with no_cov' do
-        let(:no_cov) { true }
+      context 'with nocov' do
+        let(:nocov) { true }
 
         it { is_expected.to be_falsy }
       end
 
-      context 'without no_cov' do
-        let(:no_cov) { nil }
+      context 'without nocov' do
+        let(:nocov) { nil }
 
         it { is_expected.to be_falsy }
       end
@@ -104,49 +104,49 @@ RSpec.describe Uncov::Report::File::Line do
     context 'with nocov_covered false and nocov_ignore false' do
       before { allow(Uncov.configuration).to receive_messages(nocov_covered: false, nocov_ignore: false) }
 
-      context 'with simple_cov true' do
-        let(:simple_cov) { true }
+      context 'with simplecov true' do
+        let(:simplecov) { true }
 
-        context 'with no_cov' do
-          let(:no_cov) { true }
+        context 'with nocov' do
+          let(:nocov) { true }
 
           it { is_expected.to be_falsy }
         end
 
-        context 'without no_cov' do
-          let(:no_cov) { nil }
+        context 'without nocov' do
+          let(:nocov) { nil }
 
           it { is_expected.to be_truthy }
         end
       end
 
-      context 'with simple_cov false' do
-        let(:simple_cov) { false }
+      context 'with simplecov false' do
+        let(:simplecov) { false }
 
-        context 'with no_cov' do
-          let(:no_cov) { true }
+        context 'with nocov' do
+          let(:nocov) { true }
 
           it { is_expected.to be_falsy }
         end
 
-        context 'without no_cov' do
-          let(:no_cov) { nil }
+        context 'without nocov' do
+          let(:nocov) { nil }
 
           it { is_expected.to be_falsy }
         end
       end
 
-      context 'without simple_cov' do
-        let(:simple_cov) { nil }
+      context 'without simplecov' do
+        let(:simplecov) { nil }
 
-        context 'with no_cov' do
-          let(:no_cov) { true }
+        context 'with nocov' do
+          let(:nocov) { true }
 
           it { is_expected.to be_falsy }
         end
 
-        context 'without no_cov' do
-          let(:no_cov) { nil }
+        context 'without nocov' do
+          let(:nocov) { nil }
 
           it { is_expected.to be_falsy }
         end
@@ -154,36 +154,36 @@ RSpec.describe Uncov::Report::File::Line do
     end
 
     context 'with nocov_covered true, nocov_ignore false and nocov true' do
-      let(:no_cov) { true }
+      let(:nocov) { true }
 
       before { allow(Uncov.configuration).to receive_messages(nocov_covered: true, nocov_ignore: false) }
 
-      context 'with simple_cov true' do
-        let(:simple_cov) { true }
+      context 'with simplecov true' do
+        let(:simplecov) { true }
 
         it { is_expected.to be_falsy }
       end
 
-      context 'with simple_cov false' do
-        let(:simple_cov) { false }
+      context 'with simplecov false' do
+        let(:simplecov) { false }
 
         it { is_expected.to be_truthy }
       end
     end
 
     context 'with nocov_covered true, nocov_ignore true and nocov true' do
-      let(:no_cov) { true }
+      let(:nocov) { true }
 
       before { allow(Uncov.configuration).to receive_messages(nocov_covered: true, nocov_ignore: true) }
 
-      context 'with simple_cov true' do
-        let(:simple_cov) { true }
+      context 'with simplecov true' do
+        let(:simplecov) { true }
 
         it { is_expected.to be_falsy }
       end
 
-      context 'with simple_cov false' do
-        let(:simple_cov) { false }
+      context 'with simplecov false' do
+        let(:simplecov) { false }
 
         it { is_expected.to be_falsy }
       end
@@ -196,49 +196,49 @@ RSpec.describe Uncov::Report::File::Line do
     context 'with nocov_covered true' do
       before { allow(Uncov.configuration).to receive(:nocov_covered).and_return(true) }
 
-      context 'with simple_cov true' do
-        let(:simple_cov) { true }
+      context 'with simplecov true' do
+        let(:simplecov) { true }
 
-        context 'with no_cov' do
-          let(:no_cov) { true }
+        context 'with nocov' do
+          let(:nocov) { true }
 
           it { is_expected.to be_truthy }
         end
 
-        context 'without no_cov' do
-          let(:no_cov) { nil }
+        context 'without nocov' do
+          let(:nocov) { nil }
 
           it { is_expected.to be_falsy }
         end
       end
 
-      context 'with simple_cov false' do
-        let(:simple_cov) { false }
+      context 'with simplecov false' do
+        let(:simplecov) { false }
 
-        context 'with no_cov' do
-          let(:no_cov) { true }
+        context 'with nocov' do
+          let(:nocov) { true }
 
           it { is_expected.to be_falsy }
         end
 
-        context 'without no_cov' do
-          let(:no_cov) { nil }
+        context 'without nocov' do
+          let(:nocov) { nil }
 
           it { is_expected.to be_falsy }
         end
       end
 
-      context 'without simple_cov' do
-        let(:simple_cov) { nil }
+      context 'without simplecov' do
+        let(:simplecov) { nil }
 
-        context 'with no_cov' do
-          let(:no_cov) { true }
+        context 'with nocov' do
+          let(:nocov) { true }
 
           it { is_expected.to be_falsy }
         end
 
-        context 'without no_cov' do
-          let(:no_cov) { nil }
+        context 'without nocov' do
+          let(:nocov) { nil }
 
           it { is_expected.to be_falsy }
         end
@@ -250,22 +250,22 @@ RSpec.describe Uncov::Report::File::Line do
     subject { line.trigger? }
 
     context 'when does not trigger' do
-      let(:no_cov) { true }
-      let(:simple_cov) { false }
+      let(:nocov) { true }
+      let(:simplecov) { false }
 
       it { is_expected.to be_falsy }
     end
 
     context 'when triggers because of uncov?' do
-      let(:no_cov) { nil }
-      let(:simple_cov) { false }
+      let(:nocov) { nil }
+      let(:simplecov) { false }
 
       it { is_expected.to be_truthy }
     end
 
     context 'when triggers because of nocov_covered?' do
-      let(:no_cov) { true }
-      let(:simple_cov) { true }
+      let(:nocov) { true }
+      let(:simplecov) { true }
 
       before { allow(Uncov.configuration).to receive(:nocov_covered).and_return(true) }
 
@@ -278,24 +278,24 @@ RSpec.describe Uncov::Report::File::Line do
 
     context 'when does not display' do
       let(:context) { false }
-      let(:no_cov) { true }
-      let(:simple_cov) { true }
+      let(:nocov) { true }
+      let(:simplecov) { true }
 
       it { is_expected.to be_falsy }
     end
 
     context 'when displays because of context' do
       let(:context) { true }
-      let(:no_cov) { true }
-      let(:simple_cov) { true }
+      let(:nocov) { true }
+      let(:simplecov) { true }
 
       it { is_expected.to be_truthy }
     end
 
     context 'when displays because of trigger' do
       let(:context) { true }
-      let(:no_cov) { true }
-      let(:simple_cov) { false }
+      let(:nocov) { true }
+      let(:simplecov) { false }
 
       it { is_expected.to be_truthy }
     end
@@ -305,22 +305,22 @@ RSpec.describe Uncov::Report::File::Line do
     subject { line.relevant? }
 
     context 'when not relevant' do
-      let(:no_cov) { true }
-      let(:simple_cov) { false }
+      let(:nocov) { true }
+      let(:simplecov) { false }
 
       it { is_expected.to be_falsy }
     end
 
     context 'when relevant because of trigger' do
-      let(:no_cov) { nil }
-      let(:simple_cov) { false }
+      let(:nocov) { nil }
+      let(:simplecov) { false }
 
       it { is_expected.to be_truthy }
     end
 
     context 'when relevant because of coverage' do
-      let(:no_cov) { nil }
-      let(:simple_cov) { true }
+      let(:nocov) { nil }
+      let(:simplecov) { true }
 
       it { is_expected.to be_truthy }
     end

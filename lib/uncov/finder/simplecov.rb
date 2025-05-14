@@ -3,7 +3,7 @@
 require 'json'
 
 # collect coverage information, regenerates report if any trigger_files are newer then the report
-module Uncov::Finder::SimpleCov
+module Uncov::Finder::Simplecov
   class << self
     def files(trigger_files)
       regenerate_report if requires_regeneration?(trigger_files)
@@ -67,9 +67,9 @@ module Uncov::Finder::SimpleCov
     def raise_on_missing_coverage_path!
       return if coverage_path && File.exist?(coverage_path)
 
-      raise Uncov::AutodetectSimpleCovPathError if Uncov.configuration.simplecov_file == 'autodetect'
+      raise Uncov::AutodetectSimplecovPathError if Uncov.configuration.simplecov_file == 'autodetect'
 
-      raise Uncov::MissingSimpleCovReport, coverage_path
+      raise Uncov::MissingSimplecovReport, coverage_path
     end
   end
 end

@@ -4,11 +4,11 @@
 module Uncov::Report::Filters::NocovLines
   class << self
     def description = 'Report coverage on nocov lines, requires one or both: --nocov-ignore / --nocov-covered'
-    def simple_cov_trigger = :file_system
+    def simplecov_trigger = :file_system
 
     def files(finder)
-      finder.no_cov_files.file_names.filter_map do |file_name|
-        next if finder.no_cov_files.lines(file_name).empty?
+      finder.nocov_files.file_names.filter_map do |file_name|
+        next if finder.nocov_files.lines(file_name).empty?
 
         Uncov::Report::File.new(
           file_name:,
@@ -27,7 +27,7 @@ module Uncov::Report::Filters::NocovLines
     end
 
     def nocov_files_lines(finder, file_name)
-      finder.no_cov_files.lines(file_name).keys.to_h do |line_number|
+      finder.nocov_files.lines(file_name).keys.to_h do |line_number|
         [line_number, finder.build_line(file_name, line_number)]
       end
     end
