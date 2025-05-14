@@ -4,7 +4,7 @@ RSpec.describe Uncov::Formatter do
   subject(:formatter_output) { described_class.output(report) }
 
   context 'when unknown output_format' do
-    let(:report) { Uncov::Report.new(files: [Uncov::Report::File.new(lines: [Uncov::Report::File::Line.new(simple_cov: false)])]) }
+    let(:report) { Uncov::Report.new(files: [Uncov::Report::File.new(lines: [Uncov::Report::File::Line.new(simplecov: false)])]) }
 
     before { allow(Uncov.configuration).to receive(:output_format).and_return('unknown') }
 
@@ -17,7 +17,7 @@ RSpec.describe Uncov::Formatter do
   end
 
   context 'when all covered' do
-    let(:report) { Uncov::Report.new(files: [Uncov::Report::File.new(lines: [Uncov::Report::File::Line.new(simple_cov: true)])]) }
+    let(:report) { Uncov::Report.new(files: [Uncov::Report::File.new(lines: [Uncov::Report::File::Line.new(simplecov: true)])]) }
 
     before { allow(Uncov.configuration).to receive(:output_format).and_return('Terminal') }
 

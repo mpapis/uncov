@@ -16,7 +16,7 @@ RSpec.describe Uncov::Report do
           file_name: 'example.rb',
           git: true,
           lines: [
-            Uncov::Report::File::Line.new(number: 1, simple_cov: nil, no_cov: nil, context: nil, git_diff: true, content: '')
+            Uncov::Report::File::Line.new(number: 1, simplecov: nil, nocov: nil, context: nil, git_diff: true, content: '')
           ]
         )
       ]
@@ -32,7 +32,7 @@ RSpec.describe Uncov::Report do
           file_name: 'example.rb',
           git: true,
           lines: [
-            Uncov::Report::File::Line.new(number: 1, simple_cov: true, no_cov: nil, context: nil, git_diff: true, content: 'puts "Hello world"')
+            Uncov::Report::File::Line.new(number: 1, simplecov: true, nocov: nil, context: nil, git_diff: true, content: 'puts "Hello world"')
           ]
         )
       ]
@@ -48,7 +48,7 @@ RSpec.describe Uncov::Report do
           file_name: 'example.rb',
           git: true,
           lines: [
-            Uncov::Report::File::Line.new(number: 1, simple_cov: false, no_cov: nil, context: nil, git_diff: true, content: 'puts "Hello world"')
+            Uncov::Report::File::Line.new(number: 1, simplecov: false, nocov: nil, context: nil, git_diff: true, content: 'puts "Hello world"')
           ]
         )
       ]
@@ -64,9 +64,9 @@ RSpec.describe Uncov::Report do
           file_name: 'example.rb',
           git: true,
           lines: [
-            Uncov::Report::File::Line.new(number: 1, simple_cov: nil, no_cov: true, context: nil, git_diff: true, content: ':nocov:'),
-            Uncov::Report::File::Line.new(number: 2, simple_cov: nocov_covered, no_cov: true, context: nil, git_diff: true, content: 'puts "nocov"'),
-            Uncov::Report::File::Line.new(number: 3, simple_cov: nil, no_cov: true, context: nil, git_diff: true, content: ':nocov:')
+            Uncov::Report::File::Line.new(number: 1, simplecov: nil, nocov: true, context: nil, git_diff: true, content: ':nocov:'),
+            Uncov::Report::File::Line.new(number: 2, simplecov: nocov_covered, nocov: true, context: nil, git_diff: true, content: 'puts "nocov"'),
+            Uncov::Report::File::Line.new(number: 3, simplecov: nil, nocov: true, context: nil, git_diff: true, content: ':nocov:')
           ]
         )
       ]
@@ -105,15 +105,15 @@ RSpec.describe Uncov::Report do
           file_name: 'example.rb',
           git: true,
           lines: [
-            Uncov::Report::File::Line.new(number: 1, simple_cov: nil, no_cov: true, context: nil, git_diff: true, content: ':nocov:'),
-            Uncov::Report::File::Line.new(number: 2, simple_cov: false, no_cov: true, context: nil, git_diff: true, content: 'puts "nocov"'),
-            Uncov::Report::File::Line.new(number: 3, simple_cov: nil, no_cov: true, context: nil, git_diff: true, content: ':nocov:'),
-            Uncov::Report::File::Line.new(number: 4, simple_cov: nil, no_cov: nil, context: nil, git_diff: true, content: ''),
-            Uncov::Report::File::Line.new(number: 5, simple_cov: true, no_cov: nil, context: nil, git_diff: true, content: 'puts "Covered one"'),
-            Uncov::Report::File::Line.new(number: 6, simple_cov: nil, no_cov: nil, context: true, git_diff: true, content: ''),
-            Uncov::Report::File::Line.new(number: 7, simple_cov: false, no_cov: nil, context: nil, git_diff: true, content: 'puts "Not covered"'),
-            Uncov::Report::File::Line.new(number: 8, simple_cov: nil, no_cov: nil, context: true, git_diff: true, content: ''),
-            Uncov::Report::File::Line.new(number: 9, simple_cov: true, no_cov: nil, context: nil, git_diff: true, content: 'puts "Covered two"')
+            Uncov::Report::File::Line.new(number: 1, simplecov: nil, nocov: true, context: nil, git_diff: true, content: ':nocov:'),
+            Uncov::Report::File::Line.new(number: 2, simplecov: false, nocov: true, context: nil, git_diff: true, content: 'puts "nocov"'),
+            Uncov::Report::File::Line.new(number: 3, simplecov: nil, nocov: true, context: nil, git_diff: true, content: ':nocov:'),
+            Uncov::Report::File::Line.new(number: 4, simplecov: nil, nocov: nil, context: nil, git_diff: true, content: ''),
+            Uncov::Report::File::Line.new(number: 5, simplecov: true, nocov: nil, context: nil, git_diff: true, content: 'puts "Covered one"'),
+            Uncov::Report::File::Line.new(number: 6, simplecov: nil, nocov: nil, context: true, git_diff: true, content: ''),
+            Uncov::Report::File::Line.new(number: 7, simplecov: false, nocov: nil, context: nil, git_diff: true, content: 'puts "Not covered"'),
+            Uncov::Report::File::Line.new(number: 8, simplecov: nil, nocov: nil, context: true, git_diff: true, content: ''),
+            Uncov::Report::File::Line.new(number: 9, simplecov: true, nocov: nil, context: nil, git_diff: true, content: 'puts "Covered two"')
           ]
         )
       ]
@@ -128,20 +128,20 @@ RSpec.describe Uncov::Report do
         Uncov::Report::File.new(
           file_name: 'example.rb',
           git: true,
-          lines: [Uncov::Report::File::Line.new(number: 1, simple_cov: nil, no_cov: nil, context: nil, git_diff: true, content: '')]
+          lines: [Uncov::Report::File::Line.new(number: 1, simplecov: nil, nocov: nil, context: nil, git_diff: true, content: '')]
         ),
         Uncov::Report::File.new(
           file_name: 'example.rb',
           git: true,
           lines: [
-            Uncov::Report::File::Line.new(number: 1, simple_cov: true, no_cov: nil, context: nil, git_diff: true, content: 'puts "Covered"')
+            Uncov::Report::File::Line.new(number: 1, simplecov: true, nocov: nil, context: nil, git_diff: true, content: 'puts "Covered"')
           ]
         ),
         Uncov::Report::File.new(
           file_name: 'example.rb',
           git: true,
           lines: [
-            Uncov::Report::File::Line.new(number: 1, simple_cov: false, no_cov: nil, context: nil, git_diff: true, content: 'puts "Not covered"')
+            Uncov::Report::File::Line.new(number: 1, simplecov: false, nocov: nil, context: nil, git_diff: true, content: 'puts "Not covered"')
           ]
         )
       ]

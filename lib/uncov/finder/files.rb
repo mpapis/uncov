@@ -17,7 +17,7 @@ class Uncov::Finder::Files
   end
 
   def lines(file_name)
-    @files[file_name]
+    @files[file_name] || {}
   end
 
   def line(file_name, line_number)

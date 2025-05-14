@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe Uncov::Finder::SimpleCov do
+RSpec.describe Uncov::Finder::Simplecov do
   subject(:simplecov_files) { described_class.files(trigger_files) }
 
   before { allow(Uncov.configuration).to receive(:target).and_return('clean') }
@@ -34,7 +34,7 @@ RSpec.describe Uncov::Finder::SimpleCov do
       it 'runs rspec and raises' do
         expect { simplecov_files }
           .to output(%r{^Coverage report generated for RSpec .*spec/fixtures/project/coverage}).to_stdout_from_any_process
-          .and raise_error(Uncov::MissingSimpleCovReport, 'SimpleCov results not found at "coverage/coverage.json"')
+          .and raise_error(Uncov::MissingSimplecovReport, 'SimpleCov results not found at "coverage/coverage.json"')
       end
     end
 
@@ -49,7 +49,7 @@ RSpec.describe Uncov::Finder::SimpleCov do
       it 'runs rspec and raises' do
         expect { simplecov_files }
           .to output(%r{^Coverage report generated for RSpec .*spec/fixtures/project/coverage}).to_stdout_from_any_process
-          .and raise_error(Uncov::AutodetectSimpleCovPathError, 'Could not autodetect coverage report path')
+          .and raise_error(Uncov::AutodetectSimplecovPathError, 'Could not autodetect coverage report path')
       end
     end
 

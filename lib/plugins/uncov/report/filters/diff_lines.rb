@@ -4,7 +4,7 @@
 module Uncov::Report::Filters::DiffLines
   class << self
     def description = 'Report missing coverage on added lines in the git diff'
-    def simple_cov_trigger = :git_diff
+    def simplecov_trigger = :git_diff
 
     def files(finder)
       finder.git_diff_files.file_names.map do |file_name|

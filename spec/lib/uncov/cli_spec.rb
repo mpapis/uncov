@@ -122,7 +122,7 @@ RSpec.describe Uncov::CLI do
       end
     end
 
-    context 'with --nocov-ignore', branch: 'develop_nocov_coverage' do
+    context 'with --nocov-ignore', branch: 'test_nocov_coverage' do
       let(:args) { %w[--report GitFiles --target develop --simplecov-file coverage/.resultset.json --context 2 --nocov-ignore] }
 
       before { File.utime(Time.now, Time.now, 'coverage/.resultset.json') }
@@ -151,7 +151,7 @@ RSpec.describe Uncov::CLI do
       end
     end
 
-    context 'with --nocov-ignore --nocov-covered', branch: 'develop_nocov_coverage' do
+    context 'with --nocov-ignore --nocov-covered', branch: 'test_nocov_coverage' do
       let(:args) { %w[--report GitFiles --target develop --simplecov-file coverage/.resultset.json --context 2 --nocov-ignore --nocov-covered] }
 
       before { File.utime(Time.now, Time.now, 'coverage/.resultset.json') }
@@ -181,7 +181,7 @@ RSpec.describe Uncov::CLI do
       end
     end
 
-    context 'with --nocov-covered', branch: 'develop_nocov_coverage' do
+    context 'with --nocov-covered', branch: 'test_nocov_coverage' do
       let(:args) { %w[--report GitFiles --target develop --simplecov-file coverage/.resultset.json --context 2 --nocov-covered] }
 
       before { File.utime(Time.now, Time.now, 'coverage/.resultset.json') }
@@ -210,7 +210,7 @@ RSpec.describe Uncov::CLI do
     end
   end
 
-  describe 'report NocovLines --nocov-covered', branch: 'develop_nocov_coverage' do
+  describe 'report NocovLines --nocov-covered', branch: 'test_nocov_coverage' do
     let(:args) { %w[--report NocovLines --target develop --simplecov-file coverage/.resultset.json --context 5 --nocov-covered] }
 
     before { File.utime(Time.now, Time.now, 'coverage/.resultset.json') }
@@ -236,6 +236,56 @@ RSpec.describe Uncov::CLI do
           \e[0;32;49m12: \e[0m
 
           \e[0;33;49mOverall coverage of changes: 40.00% (2 / 5)\e[0m
+        OUTPUT
+      expect(start).to be_falsey
+    end
+  end
+
+  describe 'report Simplecov --nocov-covered', branch: 'develop_a_coverage_json' do
+    let(:args) { %w[--report Simplecov --target develop --simplecov-file coverage/coverage.json --context 1] }
+
+    before { File.utime(Time.now, Time.now, 'coverage/coverage.json') }
+
+    it 'reports uncovered files from git' do
+      expect { start }
+        .to not_output.to_stderr_from_any_process
+        .and output(<<~OUTPUT).to_stdout_from_any_process
+          \e[0;33;49mFiles with uncovered changes: (1 / 1)\e[0m
+
+          \e[0;33;49mlib/project.rb -> 50.00% (2 / 4) changes covered, uncovered lines:\e[0m
+          \e[0;32;49m13: def dec(a)\e[0m
+          \e[0;31;49m14:   1\e[0m
+          \e[0;32;49m15: end\e[0m
+          \e[0;32;49m17: def succ(a)\e[0m
+          \e[0;31;49m18:   'b'\e[0m
+          \e[0;32;49m19: end\e[0m
+
+          \e[0;33;49mOverall coverage of changes: 50.00% (2 / 4)\e[0m
+        OUTPUT
+      expect(start).to be_falsey
+    end
+  end
+
+  describe 'report FileSystem --nocov-covered', branch: 'develop_a_coverage_json' do
+    let(:args) { %w[--report FileSystem --target develop --simplecov-file coverage/coverage.json --context 1] }
+
+    before { File.utime(Time.now, Time.now, 'coverage/coverage.json') }
+
+    it 'reports uncovered files from git' do
+      expect { start }
+        .to not_output.to_stderr_from_any_process
+        .and output(<<~OUTPUT).to_stdout_from_any_process
+          \e[0;33;49mFiles with uncovered changes: (1 / 1)\e[0m
+
+          \e[0;33;49mlib/project.rb -> 50.00% (2 / 4) changes covered, uncovered lines:\e[0m
+          \e[0;32;49m13: def dec(a)\e[0m
+          \e[0;31;49m14:   1\e[0m
+          \e[0;32;49m15: end\e[0m
+          \e[0;32;49m17: def succ(a)\e[0m
+          \e[0;31;49m18:   'b'\e[0m
+          \e[0;32;49m19: end\e[0m
+
+          \e[0;33;49mOverall coverage of changes: 50.00% (2 / 4)\e[0m
         OUTPUT
       expect(start).to be_falsey
     end
