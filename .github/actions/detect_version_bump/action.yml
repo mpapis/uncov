@@ -1,0 +1,44 @@
+name: 'Detect version bump'
+description: 'Detect version bump based on changelog headers'
+inputs:
+  changelog:
+    description: 'The changelog to parse'
+    required: true
+  pattern:
+    description: 'The regexp pattern to match the changelog for detecting version bump header'
+    required: true
+    default: '^### (Major|Minor|Patch)$'
+  mapping:
+    description: 'Mapping of found header to version bump'
+    required: true
+    default: |
+      Major: major
+      Minor: minor
+      Patch: patch
+outputs:
+  found:
+    description: "Indicate if a version bump was found in the changelog"
+    value: ${{ !!steps.match.outputs.result }}
+  value:
+    description: "The detected version bump"
+    value: ${{ steps.match.outputs.result }}
+runs:
+  using: "composite"
+  steps:
+    - name: Match changelog against the pattern and pick mapping
+      id: match
+      uses: actions/github-script@v7
+      with:
+        script: |
+          const changelog = '${{ inputs.changelog }}';
+          const regexPattern = /${{ inputs.pattern }}/m; // Multiline matching
+          const match = changelog.match(regexPattern);
+
+          if (match) {
+            const mapping = JSON.parse('${{ inputs.mapping }}');
+            const header = match[1]; // Get group 1
+            const result = mapping[header]; // Use mapping to get the corresponding value
+            return result; // Return the result
+          } else {
+            return null; // Return null if no match
+          }

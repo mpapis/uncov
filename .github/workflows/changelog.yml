@@ -31,7 +31,7 @@ jobs:
       changelog: ${{ steps.changelog.outputs.changelog }}
       current_version: ${{ steps.current_version.outputs.current_version }}
       new_version: ${{ steps.new_version.outputs.group1 }}
-      version_bump: ${{ steps.version_bump.outputs.lowercase }}
+      version_bump: ${{ steps.version_bump.outputs.value }}
       releasable: ${{ steps.version_bump_match.outputs.match != '' && steps.new_version.outputs.group1 != '' }}
 
     steps:
@@ -74,29 +74,20 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Detect version bump
-        uses: actions-ecosystem/action-regex-match@v2
-        id: version_bump_match
-        with:
-          text: ${{ steps.changelog.outputs.changelog }}
-          regex: '^### (Major|Minor|Patch)$'
-          flags: m
-
-      - name: Lowercase version bump
-        if: ${{ steps.version_bump_match.outputs.group1 }}
+        uses: ./.github/actions/detect_version_bump
         id: version_bump
-        uses: ASzc/change-string-case-action@v6
         with:
-          string: ${{ steps.version_bump_match.outputs.group1 }}
+          changelog: ${{ steps.changelog.outputs.changelog }}
 
       - name: Bump version output
-        if: ${{ steps.version_bump_match.outputs.group1 }}
+        if: ${{ steps.version_bump.outputs.found }}
         id: bump_version_output
         run: |
-          NEW_VERSION=$(gem bump --pretend --no-commit --version ${{ steps.version_bump.outputs.lowercase }})
+          NEW_VERSION=$(gem bump --pretend --no-commit --version ${{ steps.version_bump.outputs.value }})
           echo "bump_version_output=$NEW_VERSION" >> $GITHUB_OUTPUT
 
       - name: New version
-        if: ${{ steps.version_bump_match.outputs.group1 }}
+        if: ${{ steps.version_bump.outputs.found }}
         uses: actions-ecosystem/action-regex-match@v2
         id: new_version
         with:
@@ -105,16 +96,16 @@ jobs:
           flags: m
 
       - name: Add job summary - changelog
-        if: ${{ steps.version_bump_match.outputs.group1 }}
+        if: ${{ steps.version_bump.outputs.found }}
         run: |
           echo -e '# Current version: ${{ steps.current_version.outputs.current_version }}\n\n' > $GITHUB_STEP_SUMMARY
-          echo -e '# Version bump: ${{ steps.version_bump.outputs.lowercase }}\n\n' >> $GITHUB_STEP_SUMMARY
+          echo -e '# Version bump: ${{ steps.version_bump.outputs.value }}\n\n' >> $GITHUB_STEP_SUMMARY
           echo -e '# New version: ${{ steps.new_version.outputs.group1 }}\n\n' >> $GITHUB_STEP_SUMMARY
           echo -e '# Releasable: ${{ steps.version_bump_match.outputs.match != '' && steps.new_version.outputs.group1 != '' }}\n\n' >> $GITHUB_STEP_SUMMARY
           echo -e '# Changelog\n${{ steps.changelog.outputs.changelog }}' >> $GITHUB_STEP_SUMMARY
 
 
       - name: Add job summary - no changes
-        if: ${{ !steps.version_bump_match.outputs.group1 }}
+        if: ${{ !steps.version_bump.outputs.found }}
         run: |
           echo -e '# No changes' >> $GITHUB_STEP_SUMMARY
