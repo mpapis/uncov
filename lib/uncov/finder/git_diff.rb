@@ -47,15 +47,10 @@ class Uncov::Finder::GitDiff
 
   def git_diff
     repo = open_repo
-    # TODO: resolve the need for verifying the target with git gem
-    git_target = repo.lib.send(:command, 'rev-parse', '--verify', target)
+    git_target = repo.rev_parse(target)
     repo.diff(git_target)
-  rescue Git::FailedError => e
-    raise Uncov::NotGitObjectError, target if e.result.status.exitstatus == 128 && e.result.stderr.include?('fatal: Needed a single revision')
-
-    # :nocov: when we find a failing example, we can test it
-    raise
-    # :nocov:
+  rescue Git::FailedError
+    raise Uncov::NotGitObjectError, target
   end
 
   def target
