@@ -33,38 +33,18 @@ runs:
       with:
         script: |
           try {
-            core.debug('Starting script execution...');
-            const executeScript = new Function(`
-              try {
-                const changelog = '${{ inputs.changelog }}';
-                const regexPattern = /${{ inputs.pattern }}/m;
-                const mapping = JSON.parse('${{ inputs.mapping }}');
-                const match = changelog.match(regexPattern);
-  
-                if (match) {
-                  const header = match[1]; // Get group 1
-                  const result = mapping[header]; // Use mapping to get the corresponding value
-                  return result; // Return the result
-                } else {
-                  return null; // Return null if no match
-                }
-              } catch (error) {
-                const stack = error.stack.split('\n');
-                const lineMatch = stack[1].match(/<anonymous>:(\d+):(\d+)/);
-  
-                if (lineMatch) {
-                  const lineNumber = parseInt(lineMatch[1]);
-                  const columnNumber = parseInt(lineMatch[2]);
-  
-                  throw new Error(
-                    \`SyntaxError at line \${lineNumber}, column \${columnNumber}\\n\\nError: \${error.message}\\n\\nStack trace:\\n\${stack.join('\\n')}\`
-                  );
-                }
-                throw error;
-              }
-            `);
+            const changelog = '${{ inputs.changelog }}';
+            const regexPattern = /${{ inputs.pattern }}/m;
+            const mapping = JSON.parse('${{ inputs.mapping }}');
+            const match = changelog.match(regexPattern);
 
-            await executeScript();
+            if (match) {
+              const header = match[1]; // Get group 1
+              const result = mapping[header]; // Use mapping to get the corresponding value
+              return result; // Return the result
+            } else {
+              return null; // Return null if no match
+            }
           } catch (error) {
-            core.setFailed(`Script execution failed:\n${error.message}`);
+            core.setFailed(`Script execution failed:\nError: ${error.message}\n\nStack trace:\n${stack.join('\n')`);
           }
