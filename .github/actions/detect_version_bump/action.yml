@@ -31,13 +31,12 @@ runs:
       id: match
       uses: actions/github-script@v7
       with:
-        changelog: ${{ inputs.changelog }}
         script: |
           try {
             core.debug('Starting script execution...');
             const executeScript = new Function(`
               try {
-                const changelog = core.getInput('changelog');
+                const changelog = '${{ inputs.changelog }}';
                 const regexPattern = /${{ inputs.pattern }}/m;
                 const mapping = JSON.parse('${{ inputs.mapping }}');
                 const match = changelog.match(regexPattern);
