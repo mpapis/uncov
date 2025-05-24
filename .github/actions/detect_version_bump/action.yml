@@ -30,21 +30,26 @@ runs:
     - name: Match changelog against the pattern and pick mapping
       id: match
       uses: actions/github-script@v7
+      env:
+        CHANGELOG: ${{ inputs.changelog }}
+        PATTERN: ${{ inputs.pattern }}
+        MAPPING: ${{ inputs.mapping }}
       with:
         script: |
-          try {
-            const changelog = '${{ inputs.changelog }}';
-            const regexPattern = /${{ inputs.pattern }}/m;
-            const mapping = JSON.parse('${{ inputs.mapping }}');
-            const match = changelog.match(regexPattern);
-
-            if (match) {
-              const header = match[1]; // Get group 1
-              const result = mapping[header]; // Use mapping to get the corresponding value
-              return result; // Return the result
+          const changelog = process.env.CHANGELOG;
+          const regexPattern = new RegExp(process.env.PATTERN, "m");
+          const match = changelog.match(regexPattern);
+          if (match) {
+            const mapping = JSON.parse(process.env.MAPPING);
+            const header = match[1];
+            const result = mapping[header];
+            if (result) {
+              return result;
             } else {
-              return null; // Return null if no match
+              core.setFailed(`Pattern match not found in mapping`);
+              return null;
             }
-          } catch (error) {
-            core.setFailed(`Script execution failed:\nError: ${error.message}\n\nStack trace:\n${stack.join('\n')`);
+          } else {
+            core.log(`Pattern not matched in changelog`);
+            return null;
           }
