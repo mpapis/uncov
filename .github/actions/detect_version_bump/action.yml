@@ -12,9 +12,11 @@ inputs:
     description: 'Mapping of found header to version bump'
     required: true
     default: |
-      Major: major
-      Minor: minor
-      Patch: patch
+      {
+        "Major": "major",
+        "Minor": "minor",
+        "Patch": "patch"
+      }
 outputs:
   found:
     description: "Indicate if a version bump was found in the changelog"
@@ -30,12 +32,24 @@ runs:
       uses: actions/github-script@v7
       with:
         script: |
-          const changelog = '${{ inputs.changelog }}';
-          const regexPattern = /${{ inputs.pattern }}/m; // Multiline matching
+          try {
+            const changelog = '${{ inputs.changelog }}';
+          } catch (error) {
+            core.setFailed(`Action failed reading changelog: ${error.message}`);
+          }
+          try {
+            const regexPattern = /${{ inputs.pattern }}/m;
+          } catch (error) {
+            core.setFailed(`Action failed building pattern: ${error.message}`);
+          }
+          try {
+            const mapping = JSON.parse('${{ inputs.mapping }}');
+          } catch (error) {
+            core.setFailed(`Action failed parsing mapping: ${error.message}`);
+          }
           const match = changelog.match(regexPattern);
 
           if (match) {
-            const mapping = JSON.parse('${{ inputs.mapping }}');
             const header = match[1]; // Get group 1
             const result = mapping[header]; // Use mapping to get the corresponding value
             return result; // Return the result
