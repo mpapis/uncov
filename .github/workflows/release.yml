@@ -56,12 +56,12 @@ jobs:
             echo 'EOF'
           } | tee -a "$GITHUB_OUTPUT"
 
-      - name: Update README.md with new help output
+      - name: Update README.md with the new help output
         id: readme_update
         uses: ./.github/actions/multiline_regexp_replace_in_file
         with:
           file_name: README.md
-          pattern: '(^### Display configuration options\n```bash\n).*(```)'
+          pattern: '^(### Display configuration options\n```bash\n)[\s\S]*?(```)'
           replace: '$1${{steps.help.outputs.output}}$2'
 
       - name: Build version header
