@@ -64,7 +64,7 @@ jobs:
           pattern: '^(### Display configuration options\n```bash)\n[\s\S]*?(```)\n'
           replace: |
             $1
-            \$ uncov -h
+            $ uncov -h
             ${{steps.help.outputs.output}}
             $2
 
