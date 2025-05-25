@@ -86,10 +86,10 @@ jobs:
       - name: Add job summary - changelog
         if: ${{ steps.version_bump.outputs.found }}
         run: |
-          echo -e '# Current version: ${{ steps.current_version.outputs.value }}\n\n' > $GITHUB_STEP_SUMMARY
-          echo -e '# Version bump: ${{ steps.version_bump.outputs.value }}\n\n' >> $GITHUB_STEP_SUMMARY
-          echo -e '# New version: ${{ steps.new_version.outputs.value }}\n\n' >> $GITHUB_STEP_SUMMARY
-          echo -e '# Releasable: ${{ steps.version_bump.outputs.found && steps.new_version.outputs.found }}\n\n' >> $GITHUB_STEP_SUMMARY
+          echo -e '## Current version: ${{ steps.current_version.outputs.value }}\n\n' > $GITHUB_STEP_SUMMARY
+          echo -e '## Version bump: ${{ steps.version_bump.outputs.value }}\n\n' >> $GITHUB_STEP_SUMMARY
+          echo -e '## New version: ${{ steps.new_version.outputs.value }}\n\n' >> $GITHUB_STEP_SUMMARY
+          echo -e '## Releasable: ${{ steps.version_bump.outputs.found && steps.new_version.outputs.found }}\n\n' >> $GITHUB_STEP_SUMMARY
           echo -e '# Changelog\n${{ steps.changelog.outputs.changelog }}' >> $GITHUB_STEP_SUMMARY
 
 
