@@ -1,5 +1,5 @@
 name: 'Detect version bump'
-description: 'Detect version bump based on changelog headers'
+description: 'Detect version bump based on changelog'
 inputs:
   changelog:
     description: 'The changelog to parse'
@@ -50,6 +50,6 @@ runs:
               return null;
             }
           } else {
-            core.log(`Pattern not matched in changelog`);
+            core.notice(`Pattern not matched in changelog`);
             return null;
           }

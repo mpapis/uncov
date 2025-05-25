@@ -29,10 +29,10 @@ jobs:
       contents: read
     outputs:
       changelog: ${{ steps.changelog.outputs.changelog }}
-      current_version: ${{ steps.current_version.outputs.current_version }}
-      new_version: ${{ steps.new_version.outputs.group1 }}
+      current_version: ${{ steps.current_version.outputs.value }}
       version_bump: ${{ steps.version_bump.outputs.value }}
-      releasable: ${{ steps.version_bump_match.outputs.match != '' && steps.new_version.outputs.group1 != '' }}
+      new_version: ${{ steps.new_version.outputs.value }}
+      releasable: ${{ steps.version_bump.outputs.found && steps.new_version.outputs.found }}
 
     steps:
       - uses: actions/checkout@v4
@@ -45,14 +45,11 @@ jobs:
           ruby-version: '3.2'
           bundler-cache: true
 
-      - name: Install gem-release
-        run: gem install gem-release
-
       - name: Determine current version
         id: current_version
         run: |
           CURRENT_VERSION=$(ruby -e "require './lib/uncov/version'; puts Uncov::VERSION")
-          echo "current_version=$CURRENT_VERSION" >> $GITHUB_OUTPUT
+          echo "value=$CURRENT_VERSION" >> $GITHUB_OUTPUT
 
       - name: Generate changelog
         id: changelog
@@ -68,7 +65,7 @@ jobs:
               "ignore_labels": ["release:ignore"],
               "pr_template": "- [##{{NUMBER}}](#{{URL}}): #{{TITLE}}, by [@#{{AUTHOR}}](https://github.com/#{{AUTHOR}})"
             }
-          fromTag: "v${{ steps.current_version.outputs.current_version }}"
+          fromTag: "v${{ steps.current_version.outputs.value }}"
           toTag: "HEAD"
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -79,33 +76,24 @@ jobs:
         with:
           changelog: ${{ steps.changelog.outputs.changelog }}
 
-      - name: Bump version output
-        if: ${{ steps.version_bump.outputs.found }}
-        id: bump_version_output
-        run: |
-          NEW_VERSION=$(gem bump --pretend --no-commit --version ${{ steps.version_bump.outputs.value }})
-          echo "bump_version_output=$NEW_VERSION" >> $GITHUB_OUTPUT
-
       - name: New version
         if: ${{ steps.version_bump.outputs.found }}
-        uses: actions-ecosystem/action-regex-match@v2
         id: new_version
+        uses: ./.github/actions/new_version
         with:
-          text: ${{ steps.bump_version_output.outputs.bump_version_output }}
-          regex: '^[Bb]ump.+ ([^ ]+)$'
-          flags: m
+          bump_version: ${{ steps.version_bump.outputs.value }}
 
       - name: Add job summary - changelog
         if: ${{ steps.version_bump.outputs.found }}
         run: |
-          echo -e '# Current version: ${{ steps.current_version.outputs.current_version }}\n\n' > $GITHUB_STEP_SUMMARY
+          echo -e '# Current version: ${{ steps.current_version.outputs.value }}\n\n' > $GITHUB_STEP_SUMMARY
           echo -e '# Version bump: ${{ steps.version_bump.outputs.value }}\n\n' >> $GITHUB_STEP_SUMMARY
-          echo -e '# New version: ${{ steps.new_version.outputs.group1 }}\n\n' >> $GITHUB_STEP_SUMMARY
-          echo -e '# Releasable: ${{ steps.version_bump_match.outputs.match != '' && steps.new_version.outputs.group1 != '' }}\n\n' >> $GITHUB_STEP_SUMMARY
+          echo -e '# New version: ${{ steps.new_version.outputs.value }}\n\n' >> $GITHUB_STEP_SUMMARY
+          echo -e '# Releasable: ${{ steps.version_bump.outputs.found && steps.new_version.outputs.found }}\n\n' >> $GITHUB_STEP_SUMMARY
           echo -e '# Changelog\n${{ steps.changelog.outputs.changelog }}' >> $GITHUB_STEP_SUMMARY
 
 
       - name: Add job summary - no changes
         if: ${{ !steps.version_bump.outputs.found }}
         run: |
-          echo -e '# No changes' >> $GITHUB_STEP_SUMMARY
+          echo -e '# No changes' > $GITHUB_STEP_SUMMARY
