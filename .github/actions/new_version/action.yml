@@ -21,7 +21,7 @@ runs:
       id: bump_version
       shell: bash
       run: |
-        OUTPUT=$(gem bump --pretend --no-commit --version ${{ inputs.bump }})
+        OUTPUT=$(gem bump --pretend --no-commit --version ${{ inputs.bump_version }})
         echo "output=$OUTPUT" >> $GITHUB_OUTPUT
     - name: Run gem bump pretend
       id: match
