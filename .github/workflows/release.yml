@@ -61,11 +61,7 @@ jobs:
         uses: ./.github/actions/multiline_regexp_replace_in_file
         with:
           file_name: README.md
-          pattern: |
-            ^(### Display configuration options
-            ```bash
-            $ uncov -h)
-            [\s\S]*?(```)
+          pattern: '^(### Display configuration options\n```bash\n$ uncov -h)\n[\s\S]*?(```)\n'
           replace: |
             $1
             ${{steps.help.outputs.output}}
