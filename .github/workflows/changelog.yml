@@ -49,7 +49,7 @@ jobs:
         id: current_version
         run: |
           CURRENT_VERSION=$(ruby -e "require './lib/uncov/version'; puts Uncov::VERSION")
-          echo "value=$CURRENT_VERSION" >> $GITHUB_OUTPUT
+          echo "value=$CURRENT_VERSION" | tee -a $GITHUB_OUTPUT
 
       - name: Generate changelog
         id: changelog

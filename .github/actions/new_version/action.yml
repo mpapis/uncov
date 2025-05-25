@@ -22,7 +22,7 @@ runs:
       shell: bash
       run: |
         OUTPUT=$(gem bump --pretend --no-commit --version ${{ inputs.bump_version }})
-        echo "output=$OUTPUT" >> $GITHUB_OUTPUT
+        echo "output=$OUTPUT" | tee -a $GITHUB_OUTPUT
     - name: Run gem bump pretend
       id: match
       uses: actions/github-script@v7

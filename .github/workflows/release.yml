@@ -49,7 +49,12 @@ jobs:
 
       - name: Build help output
         id: help
-        run: echo "output=$(bundle exec uncov -h)" >> $GITHUB_OUTPUT
+        run: |
+          {
+            echo 'output<<EOF'
+            bundle exec uncov -h
+            echo 'EOF'
+          } | tee -a "$GITHUB_OUTPUT"
 
       - name: Update README.md with new help output
         id: readme_update
@@ -64,7 +69,7 @@ jobs:
         run: |
           VERSION="v${{ needs.changelog.outputs.new_version }}"
           STRING="$(date +"%Y-%m-%d"): [$VERSION](https://github.com/mpapis/uncov/releases/tag/$VERSION)"
-          echo "string=$STRING" >> $GITHUB_OUTPUT
+          echo "string=$STRING" | tee -a $GITHUB_OUTPUT
 
       - name: Update CHANGELOG.md
         id: changelog_update
