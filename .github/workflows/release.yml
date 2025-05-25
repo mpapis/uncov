@@ -89,13 +89,6 @@ jobs:
             ${{ needs.changelog.outputs.changelog }}
             
 
-      - name: DEBUG STOP
-        run: |
-          echo README changed: ${{ steps.readme_update.outputs.replaced }}
-          echo CHANGELOG changed: ${{ steps.changelog_update.outputs.replaced }}
-          git diff
-          exit 128
-
       - name: Git push changes
         run: |
           git add lib/uncov/version.rb Gemfile.lock README.md CHANGELOG.md
