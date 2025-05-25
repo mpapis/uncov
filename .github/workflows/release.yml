@@ -62,7 +62,7 @@ jobs:
         with:
           file_name: README.md
           pattern: '^(### Display configuration options\n```bash\n)[\s\S]*?(```)'
-          replace: '$1${{steps.help.outputs.output}}$2'
+          replace: '$1${{steps.help.outputs.output}}\n$2'
 
       - name: Build version header
         id: changelog_version_header
