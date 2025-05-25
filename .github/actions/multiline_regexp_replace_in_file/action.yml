@@ -1,0 +1,40 @@
+name: 'Regexp replace in file'
+description: 'Multiline regexp replace in file'
+inputs:
+  file_name:
+    description: 'File name to run replacement on'
+    required: true
+  pattern:
+    description: 'The regexp pattern to find in the file'
+    required: true
+  replace:
+    description: 'The replacement string for the pattern'
+    required: true
+outputs:
+  replaced:
+    description: "A replacement happened indicator"
+    value: ${{ steps.replace.outputs.result }}
+runs:
+  using: "composite"
+  steps:
+    - name: Regexp replace in file
+      id: replace
+      uses: actions/github-script@v7
+      env:
+        FILE_NAME: ${{ inputs.file_name }}
+        PATTERN: ${{ inputs.pattern }}
+        REPLACE: ${{ inputs.replace }}
+      with:
+        script: |
+          const fs = require('fs');
+          const file_name = process.env.FILE_NAME;
+          const regexPattern = new RegExp(process.env.PATTERN, "m");
+          const replace = process.env.REPLACE;
+          const file_content = fs.readFileSync(file_name, 'utf8');
+          const new_content = file_content.replace(regexPattern, replace);
+          if (file_content != new_content) {
+            fs.writeFileSync(file_name, new_content);
+            return true;
+          } else {
+            return false;
+          }

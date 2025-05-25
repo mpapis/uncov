@@ -47,42 +47,45 @@ jobs:
           bundle config set frozen false
           bundle install
 
-      - name: Update README.md - Display configuration options
-        run: |
-          ruby -i'' -ne "
-            BEGIN { in_target_section = false; in_code_block = false }
-            if /^### Display configuration options$/
-              in_target_section = true
-              print
-              next
-            elsif in_target_section && /^\`\`\`bash$/
-              in_code_block = true
-              puts '\`\`\`bash'
-              puts '\$ uncov -h'
-              puts '$(bundle exec uncov -h)'
-              next
-            elsif in_code_block && /^\`\`\`$/
-              in_code_block = false
-              in_target_section = false
-              puts '\`\`\`'
-              next
-            end
-            print unless in_code_block
-          " README.md
+      - name: Build help output
+        id: help
+        run: echo "output=$(bundle exec uncov -h)" >> $GITHUB_OUTPUT
 
-      - name: Update CHANGELOG.md
+      - name: Update README.md with new help output
+        id: readme_update
+        uses: ./.github/actions/multiline_regexp_replace_in_file
+        with:
+          file_name: README.md
+          pattern: '(^### Display configuration options\n```bash\n).*(```)'
+          replace: '$1${{steps.help.outputs.output}}$2'
+
+      - name: Build version header
+        id: changelog_version_header
         run: |
           VERSION="v${{ needs.changelog.outputs.new_version }}"
-          cat << EOF > CHANGELOG_NEW.md
-          # Changelog
-          
-          ## $(date +"%Y-%m-%d"): [$VERSION](https://github.com/mpapis/uncov/releases/tag/$VERSION)
-          
-          ${{ needs.changelog.outputs.changelog }}
-          
-          EOF
-          [ -f CHANGELOG.md ] && tail -n +3 CHANGELOG.md >> CHANGELOG_NEW.md
-          mv CHANGELOG_NEW.md CHANGELOG.md
+          STRING="$(date +"%Y-%m-%d"): [$VERSION](https://github.com/mpapis/uncov/releases/tag/$VERSION)"
+          echo "string=$STRING" >> $GITHUB_OUTPUT
+
+      - name: Update CHANGELOG.md
+        id: changelog_update
+        uses: ./.github/actions/multiline_regexp_replace_in_file
+        with:
+          file_name: CHANGELOG.md
+          pattern: '^# Changelog\n\n'
+          replace: |
+            # Changelog
+            
+            ## ${{steps.changelog_version_header.outputs.string}}
+            
+            ${{ needs.changelog.outputs.changelog }}
+            
+
+      - name: DEBUG STOP
+        run: |
+          echo README changed: ${{ steps.readme_update.outputs.replaced }}
+          echo CHANGELOG changed: ${{ steps.changelog_update.outputs.replaced }}
+          git diff
+          exit 128
 
       - name: Git push changes
         run: |
