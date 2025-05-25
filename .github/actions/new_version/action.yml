@@ -33,6 +33,7 @@ runs:
           const output = process.env.BUMP_VERSION_OUTPUT;
           const regexPattern = new RegExp('^[Bb]ump.* ([^ ]+)$', "m");
           const match = output.match(regexPattern);
+          core.debug(`Match: ${match}`);
           if (match) {
             const result = match[1];
           } else {
