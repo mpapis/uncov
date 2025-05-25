@@ -36,6 +36,8 @@ runs:
           core.debug(`Match: ${match}`);
           if (match) {
             const result = match[1];
+            core.debug(`Result: ${result}`);
+            return result;
           } else {
             core.setFailed(`New version not found`);
             return null;
