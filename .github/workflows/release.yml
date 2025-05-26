@@ -89,7 +89,16 @@ jobs:
             ${{ needs.changelog.outputs.changelog }}
             
 
+      - name: Generate App Token
+        id: generate-token
+        uses: actions/create-github-app-token@v1
+        with:
+          app-id: ${{ secrets.MPAPIS_PUSH_TO_GIT_APP_ID }}
+          private-key: ${{ secrets.MPAPIS_PUSH_TO_GIT_PRIVATE_KEY }}
+
       - name: Git push changes
+        env:
+          GITHUB_TOKEN: ${{ steps.generate-token.outputs.token }}
         run: |
           git add lib/uncov/version.rb Gemfile.lock README.md CHANGELOG.md
           git commit -m "Release v${{ needs.changelog.outputs.new_version }}"
