@@ -38,8 +38,8 @@ uncov
 $ uncov -h
 Usage: uncov [options]
     -t, --target TARGET              Target branch for comparison, default: "HEAD"
-    -r, --report FILTER              Report filter to generate file/line list, one_of: "diff_files", "diff_lines"(default), "git_files", "nocov_lines"
-    -o, --output-format FORMAT       Output format, one_of: "terminal"(default)
+    -r, --report FILTER              Report filter to generate file/line list, one_of: "DiffFiles", "DiffLines"(default), "FileSystem", "GitFiles", "NocovLines", "Simplecov"
+    -o, --output-format FORMAT       Output format, one_of: "Terminal"(default)
     -C, --context LINES_NUMBER       Additional lines context in output, default: 1
         --test-command COMMAND       Test command that generates SimpleCov, default: "COVERAGE=true bundle exec rake test"
         --simplecov-file PATH        SimpleCov results file, default: "autodetect"
@@ -51,10 +51,12 @@ Usage: uncov [options]
     -h, --help                       Print this help
 
 Report FILTERs:
-diff_files  - Report missing coverage on added/changed files in the git diff
-diff_lines  - Report missing coverage on added lines in the git diff
-git_files   - Report missing coverage on files tracked with git
-nocov_lines - Report coverage on nocov lines, requires one or both: --nocov-ignore / --nocov-covered
+ DiffFiles - Report missing coverage on added/changed files in the git diff
+ DiffLines - Report missing coverage on added lines in the git diff
+FileSystem - Report missing coverage on file system
+  GitFiles - Report missing coverage on files tracked with git
+NocovLines - Report coverage on nocov lines, requires one or both: --nocov-ignore / --nocov-covered
+ Simplecov - Report missing coverage on files tracked with simplecov
 
 Report FILTERs take NOTICE:
 git*/diff*  - filters will not consider new files unless added to the git index with `git add`.
@@ -64,7 +66,7 @@ nocov*      - filters/flags only work with coverage/.resultset.json SimpleCov fi
 FN_GLOB: shell filename globing -> https://ruby-doc.org/core-3.1.1/File.html#method-c-fnmatch
          in bash: `shopt -s extglob dotglob globstar` and test with `ls {app,lib}/**/*.rb`
 
-uncov 0.5.0 by Michal Papis <mpapis@gmail.com>
+uncov 0.6.0 by Michal Papis <mpapis@gmail.com>
 ```
 
 

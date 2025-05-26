@@ -1,5 +1,17 @@
 # Changelog
 
+## 2025-05-26: [v0.6.0](https://github.com/mpapis/uncov/releases/tag/v0.6.0)
+
+### Minor
+
+- [#47](https://github.com/mpapis/uncov/pull/47): Extensible with plugins, by [@mpapis](https://github.com/mpapis)
+- [#56](https://github.com/mpapis/uncov/pull/56): Add Simplecov and FileSystem filters, by [@mpapis](https://github.com/mpapis)
+
+### Patch
+
+- [#59](https://github.com/mpapis/uncov/pull/59): Simplify git rev-parse target, by [@mpapis](https://github.com/mpapis)
+
+
 ## 2025-05-12: [v0.5.0](https://github.com/mpapis/uncov/releases/tag/v0.5.0)
 
 ### Minor
