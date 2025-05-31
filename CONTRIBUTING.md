@@ -12,7 +12,7 @@ All security vulnerabilities will be promptly addressed.
 
 ## Development
 - `docker-compose build uncov` to (re-)build dev container,
-- `docker-compose run uncov` to enter dev container,
+- `docker-compose run --rm uncov` to enter dev container,
 - `bundle` to install dependencies and uncov,
 - `rake` to run lint, test and uncov - **precheck** before opening PR,
 - `uncov` to test manually
