@@ -66,7 +66,7 @@ nocov*      - filters/flags only work with coverage/.resultset.json SimpleCov fi
 FN_GLOB: shell filename globing -> https://ruby-doc.org/core-3.1.1/File.html#method-c-fnmatch
          in bash: `shopt -s extglob dotglob globstar` and test with `ls {app,lib}/**/*.rb`
 
-uncov 0.6.0 by Michal Papis <mpapis@gmail.com>
+uncov 0.6.1 by Michal Papis <mpapis@gmail.com>
 ```
 
 

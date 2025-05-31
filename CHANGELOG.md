@@ -1,5 +1,12 @@
 # Changelog
 
+## 2025-05-31: [v0.6.1](https://github.com/mpapis/uncov/releases/tag/v0.6.1)
+
+### Patch
+
+- [#63](https://github.com/mpapis/uncov/pull/63): Improve filesystem performance, by [@mpapis](https://github.com/mpapis)
+
+
 ## 2025-05-26: [v0.6.0](https://github.com/mpapis/uncov/releases/tag/v0.6.0)
 
 ### Minor
