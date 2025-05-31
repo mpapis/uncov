@@ -5,8 +5,10 @@ class Uncov::Finder::FileSystem
   include Uncov::Cache
 
   def code_files
-    list_files(Uncov.configuration.relevant_files).to_h do |file_name|
-      [file_name, read_lines(file_name)]
+    cache(:code_files) do
+      list_files(Uncov.configuration.relevant_files).to_h do |file_name|
+        [file_name, read_lines(file_name)]
+      end
     end
   end
 
@@ -17,7 +19,9 @@ class Uncov::Finder::FileSystem
   private
 
   def test_files
-    list_files(Uncov.configuration.relevant_tests)
+    cache(:test_files) do
+      list_files(Uncov.configuration.relevant_tests)
+    end
   end
 
   def list_files(glob)
@@ -25,6 +29,8 @@ class Uncov::Finder::FileSystem
   end
 
   def read_lines(file_name)
-    File.readlines(file_name).each_with_index.to_h { |line, line_index| [line_index + 1, line.rstrip] }
+    lines = {}
+    File.foreach(file_name).with_index(1) { |line, idx| lines[idx] = line.chomp }
+    lines
   end
 end
