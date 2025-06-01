@@ -46,10 +46,10 @@ runs:
             if (result) {
               return result;
             } else {
-              core.setFailed(`Pattern match not found in mapping`);
-              return null;
+              core.setFailed(`Version pattern match not found in mapping`);
+              return '';
             }
           } else {
-            core.notice(`Pattern not matched in changelog`);
-            return null;
+            core.notice(`Version pattern not matched in changelog`);
+            return '';
           }
