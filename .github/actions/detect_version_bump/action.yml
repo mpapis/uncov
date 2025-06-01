@@ -20,7 +20,7 @@ inputs:
 outputs:
   found:
     description: "Indicate if a version bump was found in the changelog"
-    value: ${{ !!steps.match.outputs.result }}
+    value: ${{ steps.match.outputs.result && steps.match.outputs.result != '' }}
   value:
     description: "The detected version bump"
     value: ${{ steps.match.outputs.result }}
