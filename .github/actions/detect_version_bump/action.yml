@@ -32,6 +32,7 @@ runs:
         PATTERN: ${{ inputs.pattern }}
         MAPPING: ${{ inputs.mapping }}
       with:
+        result-encoding: string
         script: |
           const changelog = process.env.CHANGELOG;
           const regexPattern = new RegExp(process.env.PATTERN, "m");

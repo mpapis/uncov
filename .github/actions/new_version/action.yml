@@ -26,6 +26,7 @@ runs:
       env:
         BUMP_VERSION_OUTPUT: ${{ steps.bump_version.outputs.output }}
       with:
+        result-encoding: string
         script: |
           const output = process.env.BUMP_VERSION_OUTPUT;
           const regexPattern = new RegExp('^[Bb]ump.* ([^ ]+)$', "m");
