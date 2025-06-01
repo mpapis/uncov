@@ -18,9 +18,6 @@ inputs:
         "Patch": "patch"
       }
 outputs:
-  found:
-    description: "Indicate if a version bump was found in the changelog"
-    value: ${{ steps.match.outputs.result != '' }}
   value:
     description: "The detected version bump"
     value: ${{ steps.match.outputs.result }}

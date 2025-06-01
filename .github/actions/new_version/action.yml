@@ -5,9 +5,6 @@ inputs:
     description: 'The bump to apply'
     required: true
 outputs:
-  found:
-    description: "Indicate if a new version was calculated"
-    value: ${{ !!steps.match.outputs.result }}
   value:
     description: "The new version"
     value: ${{ steps.match.outputs.result }}
@@ -40,5 +37,5 @@ runs:
             return result;
           } else {
             core.setFailed(`New version not found`);
-            return null;
+            return '';
           }
