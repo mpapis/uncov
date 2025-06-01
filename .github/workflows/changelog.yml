@@ -32,7 +32,7 @@ jobs:
       current_version: ${{ steps.current_version.outputs.value }}
       version_bump: ${{ steps.version_bump.outputs.value }}
       new_version: ${{ steps.new_version.outputs.value }}
-      releasable: ${{ steps.version_bump.outputs.value != '' && steps.new_version.outputs.value != '' }}
+      releasable: ${{ steps.version_bump.outputs.value != null && steps.version_bump.outputs.value != '' && steps.new_version.outputs.value != null && steps.new_version.outputs.value != '' }}
 
     steps:
       - uses: actions/checkout@v4
@@ -77,23 +77,23 @@ jobs:
           changelog: ${{ steps.changelog.outputs.changelog }}
 
       - name: New version
-        if: ${{ steps.version_bump.outputs.value != '' }}
+        if: ${{ steps.version_bump.outputs.value != null && steps.version_bump.outputs.value != '' }}
         id: new_version
         uses: ./.github/actions/new_version
         with:
           bump_version: ${{ steps.version_bump.outputs.value }}
 
       - name: Add job summary - changelog
-        if: ${{ steps.version_bump.outputs.value != '' }}
+        if: ${{ steps.version_bump.outputs.value != null && steps.version_bump.outputs.value != '' }}
         run: |
-          echo -e '## Current version: ${{ steps.current_version.outputs.value }}\n\n' > $GITHUB_STEP_SUMMARY
-          echo -e '## Version bump: ${{ steps.version_bump.outputs.value }}\n\n' >> $GITHUB_STEP_SUMMARY
-          echo -e '## New version: ${{ steps.new_version.outputs.value }}\n\n' >> $GITHUB_STEP_SUMMARY
-          echo -e '## Releasable: ${{ steps.version_bump.outputs.value != '' && steps.new_version.outputs.value != '' }}\n\n' >> $GITHUB_STEP_SUMMARY
-          echo -e '# Changelog\n${{ steps.changelog.outputs.changelog }}' >> $GITHUB_STEP_SUMMARY
+          echo -e '## Current version: ${{ steps.current_version.outputs.value }}\n' > $GITHUB_STEP_SUMMARY
+          echo -e '## Version bump: ${{ steps.version_bump.outputs.value }}\n' >> $GITHUB_STEP_SUMMARY
+          echo -e '## New version: ${{ steps.new_version.outputs.value }}\n' >> $GITHUB_STEP_SUMMARY
+          echo -e '## Releasable: ${{ steps.version_bump.outputs.value != null && steps.version_bump.outputs.value != '' && steps.new_version.outputs.value != null && steps.new_version.outputs.value != '' }}\n' >> $GITHUB_STEP_SUMMARY
+          echo -e '# Changelog\n${{ steps.changelog.outputs.changelog }}\n' >> $GITHUB_STEP_SUMMARY
 
 
       - name: Add job summary - no changes
-        if: ${{ steps.version_bump.outputs.value == '' }}
+        if: ${{  steps.version_bump.outputs.value == null || steps.version_bump.outputs.value == '' }}
         run: |
           echo -e '# No changes' > $GITHUB_STEP_SUMMARY
