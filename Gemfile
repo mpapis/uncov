@@ -6,7 +6,7 @@ source 'https://rubygems.org'
 gemspec
 
 gem 'pry', '~> 0.15'
-gem 'rake', '~> 13.2'
+gem 'rake', '~> 13.3'
 gem 'rspec', '~> 3.13', require: false
 gem 'rubocop', '~> 1.75', require: false
 gem 'rubocop-performance', '~> 1.25', require: false
