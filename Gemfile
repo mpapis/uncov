@@ -8,7 +8,7 @@ gemspec
 gem 'pry', '~> 0.15'
 gem 'rake', '~> 13.3'
 gem 'rspec', '~> 3.13', require: false
-gem 'rubocop', '~> 1.76', require: false
+gem 'rubocop', '~> 1.79', require: false
 gem 'rubocop-performance', '~> 1.25', require: false
 gem 'rubocop-rspec', '~> 3.6', require: false
 gem 'simplecov', '~> 0.22.0', require: false
