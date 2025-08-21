@@ -1,5 +1,12 @@
 # Changelog
 
+## 2025-08-21: [v0.6.2](https://github.com/mpapis/uncov/releases/tag/v0.6.2)
+
+### Patch
+
+- [#74](https://github.com/mpapis/uncov/pull/74): Update git requirement from ~> 3.1 to >= 3.1, < 5.0, by [@dependabot[bot]](https://github.com/dependabot[bot])
+
+
 ## 2025-05-31: [v0.6.1](https://github.com/mpapis/uncov/releases/tag/v0.6.1)
 
 ### Patch
